@@ -2,12 +2,12 @@ const Controller = require('../controllers/authController')
 
 const router = require('express').Router()
 
-router.post('/register',Controller)
+router.post('/register',Controller.register)
 
-router.post('/login',Controller)
+router.post('/login',Controller.login)
 
-router.post('/googleLogin',Controller)
+router.post('/googleLogin',Controller.google)
 
-router.post('/facebookLogin',Controller)
+router.post('/facebookLogin',Controller.facebook)
 
 module.exports = router
