@@ -19,7 +19,7 @@ module.exports = {
       },
       status:{
         type:Sequelize.STRING,
-        defaultValue:`Standar`
+        defaultValue:`Standard`
       },
       createdAt: {
         allowNull: false,

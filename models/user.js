@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     status:{
       type:DataTypes.STRING,
-      defaultValue:`Standar`
+      defaultValue:`Standard`
     },
   }, {
     sequelize,
