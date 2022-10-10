@@ -1,0 +1,23 @@
+
+const errorHandlers = async (err, req, res, next) => {
+    let code = 500
+    let message = "Internal Server Error"
+    if (err.name == 'SequelizeValidationError' || err.name == 'SequelizeUniqueConstraintError') {
+        code = 400
+        message = err.errors.map((el) => {
+            return el.message;
+        });
+    } else if (err.name == 'error_login') {
+        code = 401
+        message = "invalid or email or password"
+    } else if (err.name == "invalid_credentials") {
+        code = 404
+        message = "error not found"
+    } else if (err.name == "forbidden") {
+        code = 403
+        message = "forbidden"
+    }
+    res.status(code).json(message)
+}
+
+module.exports = errorHandlers

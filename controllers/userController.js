@@ -1,0 +1,46 @@
+const { comparePassword } = require('../helpers/bcrypt')
+const { getToken } = require('../helpers/jwt')
+const {User} = require('../models')
+
+class UserController {
+
+    static async register(req, res, next) {
+        try {
+            const { name, email, password } = req.body
+            let result = await User.create({ name, email, password })
+            res.status(201).json({id: result.id, name: result.name, email: result.email })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async login(req, res, next) {
+        try {
+            const { email, password } = req.body
+            if (!email) {
+                throw{name: 'no_credentials', err: 'Email is required'}
+            }
+
+            if (!password) {
+                throw { name: 'no_credentials', err: 'Password is required' }
+            }
+            const user = await User.findOne({ where: { email } })
+            if (!user) {
+                throw { name: 'error_login' }
+            }
+            const passwordValid = comparePassword(password, user.password)
+            if (!passwordValid) {
+                throw { name: 'error_login' }
+            }
+            const payload = { id: user.id }
+            const accessToken = getToken(payload)
+
+            res.status(200).json({ access_token: accessToken, name: user.name, email: user.email })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+}
+
+module.exports = UserController
