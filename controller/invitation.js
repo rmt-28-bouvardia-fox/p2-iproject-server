@@ -42,7 +42,6 @@ class Controller {
         res.status(200).json(findInvitation);
       }
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -82,7 +81,20 @@ class Controller {
 
       res.status(200).json("Success");
     } catch (error) {
-        console.log(error)
+      next(error);
+    }
+  }
+  static async deleteInvitation(req, res, next) {
+    try {
+      const { coupleName } = req.params;
+      const findInvitation = await Invitation.findOne({ where: { coupleName } });
+      if (!findInvitation) {
+        throw { name: "Data not found" };
+      }
+      const deleted = await Invitation.destroy({ where: { id : findInvitation.id } })
+
+      res.status(200).json("Success");
+    } catch (error) {
       next(error);
     }
   }
