@@ -1,2 +1,1 @@
-# p2-iproject-server
-Individual Project - Server
+# Individual Project!
