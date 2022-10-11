@@ -19,12 +19,8 @@ module.exports = {
           key: "id",
         },
       },
-      titlegame: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      price: {
-        type: Sequelize.INTEGER,
+      dataGame: {
+        type: Sequelize.JSON,
         allowNull: false,
       },
       createdAt: {

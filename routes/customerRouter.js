@@ -8,4 +8,6 @@ router.post("/login", Controller.customerLogin);
 
 router.use(authentication);
 
+router.get("/games", Controller.gameCustomer);
+
 module.exports = router;

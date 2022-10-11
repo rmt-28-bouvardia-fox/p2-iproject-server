@@ -1,6 +1,7 @@
 const { User } = require("../models");
 const { createToken } = require("../helpers/jwt");
 const { compare } = require("../helpers/bcrypt");
+const axios = require("axios");
 
 class Controller {
   static async customerRegister(req, res, next) {
@@ -57,6 +58,19 @@ class Controller {
       res.status(200).json({ access_token });
     } catch (error) {
       console.log(error);
+      next(error);
+    }
+  }
+
+  static async gameCustomer(req, res, next) {
+    try {
+      const { title } = req.query;
+      const { data } = await axios({
+        method: "get",
+        url: `https://www.cheapshark.com/api/1.0/games?title=${title}`,
+      });
+      res.status(200).json(data);
+    } catch (error) {
       next(error);
     }
   }
