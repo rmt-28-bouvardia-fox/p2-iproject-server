@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Team.belongsToMany(models.Player, {as:'Players' , through: models.MyPlayer})
       Team.belongsTo(models.User)
-      Team.belongsToMany(models.Player, {through: models.MyPlayer})
     }
   }
   Team.init({

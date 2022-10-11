@@ -12,17 +12,24 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      rating: {
+      number: {
         allowNull: false,
         type: Sequelize.INTEGER
+      },
+      team: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      rating: {
+        type: Sequelize.DECIMAL
       },
       position: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      starter: {
+      photo: {
         allowNull: false,
-        type: Sequelize.BOOLEAN
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

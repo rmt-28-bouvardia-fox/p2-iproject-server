@@ -15,6 +15,10 @@ module.exports = {
         },
         type: Sequelize.INTEGER
       },
+      starter: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
       PlayerId: {
         references: {
           model: 'Players',

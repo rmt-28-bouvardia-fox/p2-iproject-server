@@ -16,14 +16,21 @@ class TeamController {
         try {
             const UserId = req.user.id
             const option = {}
-            option.where = { UserId }
-            const team = await Team.findOne(option)
+
+            const team = await Team.findOne({
+                include: {
+                    model: Player,
+                    as: 'Players'
+                },
+                where: { UserId }
+            })
             if (!team) {
                 throw { name: 'invalid_credentials' }
             }
-
+            console.log(team);
             res.status(200).json(team)
         } catch (error) {
+            console.log(error);
             next(error)
         }
     }
@@ -37,7 +44,7 @@ class TeamController {
                 throw{name: 'no_credentials'}
             }
 
-            
+
             const myPlayer = await MyPlayer.findOne({ where: { PlayerId: player.id, TeamId } })
             if (myPlayer) {
                 throw{name: 'bad_request', err: `Your team already have ${player.name}!`}
@@ -87,7 +94,8 @@ class TeamController {
             }
             await MyPlayer.create({ TeamId, PlayerId: randomNumber })
             Team.decrement({ money: price }, { where: { id: TeamId } })
-            res.status(201).json({ message: `Success recruit ${ player.name } for ${team.name}` })
+            res.status(201).json(player)
+            // res.status(201).json({ message: `Success recruit ${ player.name } for ${team.name}` })
         } catch (error) {
             next(error)
         }
