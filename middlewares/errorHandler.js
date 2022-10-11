@@ -1,14 +1,13 @@
 const errorHandler = (err, req, res, next) => {
-  console.log(error)
   let code = 500;
   let message = "Internal Server Error";
 
   if (err.name === "SequelizeValidationError") {
     code = 400;
     message = err.errors[0].message;
-  } else if (err.name === "not_found") {
+  } else if (err.name === "post_not_found") {
     code = 404;
-    message = "Not Found";
+    message = "Post Not Found";
   } else if (err.name === "SequelizeUniqueConstraintError") {
     code = 400;
     message = "Email already Used";

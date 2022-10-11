@@ -56,6 +56,72 @@ class PostController {
       next(error);
     }
   }
+
+  static async showUserPost(req, res, next) {
+    try {
+      const posts = await Post.findAll({
+        where: { UserId: req.user.id },
+      });
+      res.status(200).json(posts);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deletePost(req, res, next) {
+    const { id } = req.params;
+    try {
+      const post = await Post.findByPk(id);
+
+      if (!post) {
+        throw { name: "post_not_found" };
+      }
+
+      const status = await Post.destroy({ where: { id, UserId: req.user.id } });
+
+      if (status === 0) {
+        throw { name: "post_not_found" };
+      }
+
+      console.log(status);
+
+      res.status(200).json({ message: `Post has been deleted` });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async editPost(req, res, next) {
+    try {
+      const { title } = req.body;
+      const { id } = req.params;
+      if (!title) {
+        throw { name: "invalid_input" };
+      }
+      const post = await Post.findByPk(id);
+      if (!post) {
+        throw { name: "post_not_found" };
+      }
+
+      const status = await Post.update(
+        { title },
+        {
+          where: {
+            id,
+            UserId: req.user.id,
+          },
+        }
+      );
+
+      if (status[0] === 0) {
+        throw { name: "post_not_found" };
+      }
+
+      res.status(200).json({ message: `Post with id ${post.id} updated` });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = PostController;
