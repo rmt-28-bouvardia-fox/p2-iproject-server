@@ -11,6 +11,11 @@ router.get(
   controllerAppointment.getAllSymptom
 );
 router.get(
+  "/specialists",
+  patientAuthorization,
+  controllerAppointment.getAllSpecialist
+);
+router.get(
   "/patients",
   patientAuthorization,
   controllerAppointment.getAllPatientAppointment
