@@ -9,7 +9,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const app = express();
 const port = 3000;
 
-const { ref, set, push } = require("firebase/database");
+const { ref, get, push, child } = require("firebase/database");
 const dbRef = ref(firebase, "/bids");
 
 const { User } = require("./models");
@@ -63,6 +63,36 @@ app.post("/register", async (req, res, next) => {
     const newUser = await User.create({ username, email, password, phoneNumber });
 
     res.status(200).json({ id: newUser.id, email: newUser.email });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get("/bid/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      throw { name: "id_is_required" };
+    }
+
+    const bid = await get(child(dbRef, id));
+
+    const { data } = await axios({
+      url: "https://db.ygoprodeck.com/api/v7/cardinfo.php",
+      method: "GET",
+      params: {
+        id: bid.val().cardId,
+      },
+    });
+
+    const cardDetail = data.data[0];
+    let detailBid = {
+      ...bid.val(),
+      cardDetail,
+    };
+
+    res.status(200).json(detailBid);
   } catch (error) {
     next(error);
   }

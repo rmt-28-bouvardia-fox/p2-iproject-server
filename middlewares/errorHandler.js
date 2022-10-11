@@ -2,6 +2,8 @@ const errorHandler = (err, req, res, next) => {
   let code = 500;
   let message = "Internal Server Error";
 
+  console.log(err);
+
   if (err.name == "AxiosError" && err.response.status) {
     code = 404;
     message = "Card not found";
@@ -14,18 +16,21 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "password_is_required") {
     code = 400;
     message = "Password is required";
+  } else if (err.name === "id_is_required") {
+    code = 400;
+    message = "Id is required";
   } else if (err.name === "cardId_is_required") {
     code = 400;
-    message = "cardId is required";
+    message = "Card Id is required";
   } else if (err.name === "expiredBy_is_required") {
     code = 400;
-    message = "expiredBy is required";
+    message = "Auction End Datetime is required";
   } else if (err.name === "startPrice_is_required") {
     code = 400;
-    message = "startPrice is required";
+    message = "Price is required";
   } else if (err.name === "startPrice_min_1000") {
     code = 400;
-    message = "startPrice minimum 1000";
+    message = "Minimum price is 1000";
   } else if (err.name === "ids_not_provided") {
     code = 400;
     message = "String of ids not provided";
