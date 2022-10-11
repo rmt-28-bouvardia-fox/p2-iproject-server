@@ -1,4 +1,6 @@
 const { Appointment, ConsultationReport } = require("../models");
+const axios = require("axios");
+const API_MEDIC_KEY = process.env.API_MEDIC_KEY;
 
 const createAppointment = async (req, res, next) => {
   try {
@@ -14,6 +16,21 @@ const createAppointment = async (req, res, next) => {
       PatientId,
     });
     res.status(201).json(appointment);
+  } catch (error) {
+    next(error);
+  }
+};
+const getAllSymptom = async (req, res, next) => {
+  try {
+    const { data } = await axios({
+      method: "get",
+      url: "https://sandbox-healthservice.priaid.ch/symptoms",
+      params: {
+        token: API_MEDIC_KEY,
+        language: "en-gb",
+      },
+    });
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }
@@ -70,6 +87,7 @@ const getAllDoctorAppointment = async (req, res, next) => {
 };
 module.exports = {
   createAppointment,
+  getAllSymptom,
   createConsultReport,
   getAllPatientAppointment,
   getAllDoctorAppointment,
