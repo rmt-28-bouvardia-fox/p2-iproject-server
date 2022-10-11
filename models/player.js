@@ -11,14 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Player.belongsToMany(models.Team, { through: models.MyPlayer })
+      Player.belongsToMany(models.Team, {as: 'Team' , through: models.MyPlayer })
     }
   }
   Player.init({
     name: DataTypes.STRING,
     rating: DataTypes.INTEGER,
     position: DataTypes.STRING,
-    starter: DataTypes.BOOLEAN
+    number: DataTypes.INTEGER,
+    team: DataTypes.STRING,
+    photo: DataTypes.STRING
+    // photo: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Player',

@@ -7,9 +7,12 @@ const errorHandlers = async (err, req, res, next) => {
         message = err.errors.map((el) => {
             return el.message;
         });
+    } else if (err.name == 'error_buy' || err.name == 'bad_request') {
+        code = 402
+        message = err.err
     } else if (err.name == 'error_login') {
         code = 401
-        message = "invalid or email or password"
+        message = "invalid email or password"
     } else if (err.name == "invalid_credentials") {
         code = 404
         message = "error not found"

@@ -16,12 +16,17 @@ class TeamController {
         try {
             const UserId = req.user.id
             const option = {}
-            option.where = { UserId }
-            const team = await Team.findOne(option)
+
+            const team = await Team.findOne({
+                include: {
+                    model: Player,
+                    as: 'Players'
+                },
+                where: { UserId }
+            })
             if (!team) {
                 throw { name: 'invalid_credentials' }
             }
-
             res.status(200).json(team)
         } catch (error) {
             next(error)
@@ -37,7 +42,6 @@ class TeamController {
                 throw{name: 'no_credentials'}
             }
 
-            
             const myPlayer = await MyPlayer.findOne({ where: { PlayerId: player.id, TeamId } })
             if (myPlayer) {
                 throw{name: 'bad_request', err: `Your team already have ${player.name}!`}
@@ -58,12 +62,13 @@ class TeamController {
             }      
             const team = await Team.findOne({where: {id: TeamId}})
             if (team.money < price) {
-                throw { name: 'error buy' }
+                throw { name: 'error_buy' }
             }
             await MyPlayer.create({ TeamId, PlayerId: player.id })
             await Team.decrement({ money: price }, { where: { id: TeamId } })           
             res.status(201).json({ message: `Success buy ${player.name} for ${team.name}`})
         } catch (error) {
+            console.log(error);
             next(error)
         }
     }
@@ -83,7 +88,7 @@ class TeamController {
             const price = 1000
             const team = await Team.findOne({where: {id:TeamId}})
             if (team.money < price) {
-                throw { name: 'error buy' }
+                throw { name: 'error_buy', err: `Your don't have enough money!` }
             }
             await MyPlayer.create({ TeamId, PlayerId: randomNumber })
             Team.decrement({ money: price }, { where: { id: TeamId } })
