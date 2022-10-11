@@ -14,19 +14,22 @@ const errorHandler = (error, req, res, next) => {
     message = `Data not found`;
   } else if (error.name == `invalid_credentials`) {
     code = 401;
-    message = `invalid email or password`;
+    message = `Invalid email or password`;
   } else if (
     error.name == `invalid token` ||
     error.name == `JsonWebTokenError`
   ) {
     code = 401;
-    message = `invalid token`;
+    message = `Invalid token`;
   } else if (error.name == `forbidden`) {
     code = 403;
     message = `Forbidden`;
   } else if (error.name == "already") {
     code = 400;
     message = "You already add this movie to your favorite";
+  } else if (error.name == "body_missing") {
+    code = error.status;
+    message = error.message;
   }
   res.status(code).json({ message });
 };
