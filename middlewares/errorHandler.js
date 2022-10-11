@@ -5,7 +5,11 @@ const errorHandler = (err,req,res,next) => {
 
     if(err.name == `SequelizeValidationError` || err.name == `SequelizeUniqueConstraintError`){
         status = 400
-        message = err.errors.map(el => el.message)
+        message = err.errors[0].message
+    }
+    else if(err.name == `email unique`){
+        status = 400
+        message = `email is already use`
     }
     else if(err.name == `Data Not Found`){
         status = 404
