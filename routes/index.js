@@ -9,4 +9,6 @@ router.post("/login", UserController.login);
 
 router.use(authentication);
 
+router.use("/posts", require("./posts"));
+
 module.exports = router;
