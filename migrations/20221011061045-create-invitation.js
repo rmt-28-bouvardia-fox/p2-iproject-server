@@ -10,6 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       UserId: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: {
@@ -19,27 +20,35 @@ module.exports = {
         }
       },
       groomName: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       fatherGroom: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       motherGroom: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       BrideName: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       fatherBride: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       motherBride: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       weddingDate: {
+        allowNull: false,
         type: Sequelize.DATE
       },
       weddingLocation: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       createdAt: {
