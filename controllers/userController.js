@@ -14,7 +14,9 @@ class UserController {
         email,
         password,
       });
-      res.status(201).json({ message: `Have Fun ${user.username} !` });
+      res
+        .status(201)
+        .json({ message: `Welcome and Have Fun ${user.username} !` });
     } catch (error) {
       next(error);
     }
