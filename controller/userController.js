@@ -37,14 +37,15 @@ class UserController {
     }
     static async registerUser(req, res, next) {
         try {
-            const { username, password, email, phoneNumber, address } =
+            const { username, password, email, phoneNumber, longtitude, latitude } =
         req.body;
       const newUser = await User.create({
         username,
         password,
         email,
         phoneNumber,
-        address,
+        longtitude,
+        latitude
       })
       res
         .status(200)
