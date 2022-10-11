@@ -14,6 +14,12 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name === "Invalid Input") {
     errorCode = 401;
     message = "Invalid email or password";
+  } else if (
+    error.name === "Error authentication" ||
+    error.name === "JsonWebTokenError"
+  ) {
+    errorCode = 401;
+    message = "Invalid authentication";
   }
   res.status(errorCode).json({ message });
 };
