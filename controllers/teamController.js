@@ -37,6 +37,7 @@ class TeamController {
                 throw{name: 'no_credentials'}
             }
 
+            
             const myPlayer = await MyPlayer.findOne({ where: { PlayerId: player.id, TeamId } })
             if (myPlayer) {
                 throw{name: 'bad_request', err: `Your team already have ${player.name}!`}
@@ -88,12 +89,9 @@ class TeamController {
             Team.decrement({ money: price }, { where: { id: TeamId } })
             res.status(201).json({ message: `Success recruit ${ player.name } for ${team.name}` })
         } catch (error) {
-            console.log(error);
             next(error)
         }
     }
-
-    
 
     static async formattion(req, res, next) {
         try {

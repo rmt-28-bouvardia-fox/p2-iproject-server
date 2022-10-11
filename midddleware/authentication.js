@@ -12,11 +12,9 @@ const authentication = async (req, res, next) => {
         if (!user) {
             throw { name: "invalid_token" }
         }
-        const team = await Team.findOne({ where: { UserId: user.id } })
-        req.user = { id: user.id, name: user.name, TeamId: team.id }
+        req.user = { id: user.id, name: user.name }
         next();
     } catch (error) {
-        console.log(error);
         if (error.name === "invalid_token" || error.name === "JsonWebTokenError") {
             res.status(401).json({ message: "invalid token" })
         } else {

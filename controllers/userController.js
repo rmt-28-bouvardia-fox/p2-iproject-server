@@ -8,7 +8,9 @@ class UserController {
         try {
             const { name, email, password } = req.body
             let result = await User.create({ name, email, password })
-            res.status(201).json({id: result.id, name: result.name, email: result.email })
+            const payload = {id: result.id}
+            const access_token = getToken(payload)
+            res.status(201).json({ id: result.id, name: result.name, access_token })
         } catch (error) {
             next(error)
         }
@@ -33,9 +35,9 @@ class UserController {
                 throw { name: 'error_login' }
             }
             const payload = { id: user.id }
-            const accessToken = getToken(payload)
+            const access_token = getToken(payload)
 
-            res.status(200).json({ access_token: accessToken, name: user.name, email: user.email })
+            res.status(200).json({ access_token, name: user.name, email: user.email })
         } catch (error) {
             next(error)
         }
