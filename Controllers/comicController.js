@@ -12,17 +12,20 @@ class ComicController{
         try {
             const {page, title} = req.query
             const offset = page * 9 - 9
+            let params = {
+                ts : date,
+                apikey : publicK,
+                hash : hash,
+                offset : offset,
+                limit : 9,
+            }
+            if(title){
+                params.title = title
+            }
             const {data} = await axios({
                 url: `https://gateway.marvel.com:443/v1/public/comics`,
                 method : `get`,
-                params : {
-                    ts : date,
-                    apikey : publicK,
-                    hash : hash,
-                    offset : offset,
-                    limit : 9,
-                    title : title
-                }
+                params : params
             })
             const result = data.data.results
             
