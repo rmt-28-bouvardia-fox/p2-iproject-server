@@ -48,7 +48,9 @@ class Controller {
   static async updateInvitation(req, res, next) {
     try {
       const { coupleName } = req.params;
-      const findInvitation = await Invitation.findOne({ where: { coupleName } });
+      const findInvitation = await Invitation.findOne({
+        where: { coupleName },
+      });
       if (!findInvitation) {
         throw { name: "Data not found" };
       }
@@ -76,7 +78,7 @@ class Controller {
           weddingLocation,
           coupleName: `${groomName}&${BrideName}`,
         },
-        { where: { id : findInvitation.id } }
+        { where: { id: findInvitation.id } }
       );
 
       res.status(200).json("Success");
@@ -87,11 +89,35 @@ class Controller {
   static async deleteInvitation(req, res, next) {
     try {
       const { coupleName } = req.params;
-      const findInvitation = await Invitation.findOne({ where: { coupleName } });
+      const findInvitation = await Invitation.findOne({
+        where: { coupleName },
+      });
       if (!findInvitation) {
         throw { name: "Data not found" };
       }
-      const deleted = await Invitation.destroy({ where: { id : findInvitation.id } })
+      const deleted = await Invitation.destroy({
+        where: { id: findInvitation.id },
+      });
+
+      res.status(200).json("Success");
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async chooseTemplate(req, res, next) {
+    try {
+      const { coupleName } = req.params;
+      const findInvitation = await Invitation.findOne({
+        where: { coupleName },
+      });
+      if (!findInvitation) {
+        throw { name: "Data not found" };
+      }
+
+      const TemplateId = req.body;
+      const update = await Invitation.update(TemplateId, {
+        where: { coupleName },
+      });
 
       res.status(200).json("Success");
     } catch (error) {

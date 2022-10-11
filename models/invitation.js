@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       Invitation.belongsTo(models.User, {
         foreignKey: "UserId",
       });
+      Invitation.belongsTo(models.Template,{
+        foreignKey: "TemplateId"
+      })
     }
   }
   Invitation.init(
@@ -95,6 +98,10 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: { msg: "Couple name is required" },
           notNull: { msg: "Couple name is required" },
         },
+      },
+      TemplateId: {
+        type: DataTypes.TEXT,
+        allowNull:true
       },
     },
     {
