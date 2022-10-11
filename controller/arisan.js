@@ -1,5 +1,5 @@
 const { Op } = require("sequelize")
-const { Arisan, MyArisan, User } = require("../models")
+const { Arisan, MyArisan, User, LogTrans } = require("../models")
 
 class Controller {
     static async fetchArisan(req, res, next) {
@@ -39,4 +39,16 @@ class Controller {
             next(error)
         }
     }
+    static async fetchLogTransaction(req, res, next) {
+        try {
+            const result = LogTrans.findAll({
+                where : {
+                    UserId : req.user.id
+                }
+            })
+            res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }   
 }
