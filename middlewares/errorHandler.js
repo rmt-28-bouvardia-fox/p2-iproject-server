@@ -13,17 +13,20 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "invalid_password") {
     status = 400;
     message = `Password is required`;
+  } else if (err.name === "invalid_email_address") {
+    status = 400;
+    message = `Please use valid email address`;
   } else if (err.name === "invalid_credentials") {
-    code = 401;
+    status = 401;
     message = `Invalid email or password`;
   } else if (err.name === "invalid_token" || err.name === "JsonWebTokenError") {
-    code = 401;
+    status = 401;
     message = `Please login first`;
   } else if (err.name === "forbidden" ) {
-    code = 403;
+    status = 403;
     message = `You are not authorized`;
   } else if (err.name === "data_not_found" ) {
-    code = 404;
+    status = 404;
     message = `Data not found`;
   }
   res.status(status).json({ message });

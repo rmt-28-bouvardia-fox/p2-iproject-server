@@ -1,10 +1,23 @@
 const { Patient, PatientDetail } = require("../models");
 const { compare } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
+const axios = require("axios");
+const ABSTRACT_API_KEY = process.env.ABSTRACT_API_KEY;
 
 const registerPatient = async (req, res, next) => {
   const { email, password } = req.body;
   try {
+    const { data } = await axios({
+      method: "get",
+      url: "https://emailvalidation.abstractapi.com/v1/",
+      params: {
+        api_key: ABSTRACT_API_KEY,
+        email,
+      },
+    });
+    if (data.deliverability !== "DELIVERABLE") {
+      throw { name: "invalid_email_address" };
+    }
     const patient = await Patient.create({
       email,
       password,
