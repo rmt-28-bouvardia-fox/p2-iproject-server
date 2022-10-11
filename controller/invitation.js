@@ -32,7 +32,7 @@ class Controller {
   }
   static async readInvitation(req, res, next) {
     try {
-      const {coupleName} = req.params;
+      const { coupleName } = req.params;
       const findInvitation = await Invitation.findOne({
         where: { coupleName },
       });
@@ -43,6 +43,46 @@ class Controller {
       }
     } catch (error) {
       console.log(error);
+      next(error);
+    }
+  }
+  static async updateInvitation(req, res, next) {
+    try {
+      const { coupleName } = req.params;
+      const findInvitation = await Invitation.findOne({ where: { coupleName } });
+      if (!findInvitation) {
+        throw { name: "Data not found" };
+      }
+      const {
+        groomName,
+        fatherGroom,
+        motherGroom,
+        BrideName,
+        fatherBride,
+        motherBride,
+        weddingDate,
+        weddingLocation,
+      } = req.body;
+
+      const update = await Invitation.update(
+        {
+          UserId: req.user.id,
+          groomName,
+          fatherGroom,
+          motherGroom,
+          BrideName,
+          fatherBride,
+          motherBride,
+          weddingDate,
+          weddingLocation,
+          coupleName: `${groomName}&${BrideName}`,
+        },
+        { where: { id : findInvitation.id } }
+      );
+
+      res.status(200).json("Success");
+    } catch (error) {
+        console.log(error)
       next(error);
     }
   }

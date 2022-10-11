@@ -23,6 +23,9 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name === "Data not found") {
     errorCode = 404;
     message = "Data nof found";
+  } else if (error.name === "Forbidden") {
+    errorCode = 403;
+    message = "You don't have permission to access";
   }
   res.status(errorCode).json({ message });
 };
