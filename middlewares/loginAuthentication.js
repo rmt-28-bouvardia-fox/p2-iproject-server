@@ -18,9 +18,9 @@ const authentication = async (req, res, next) => {
       throw { name: "invalid_token" };
     }
     if (patient) {
-      req.user = { id: patient.id };
+      req.user = { id: patient.id, email: patient.email };
     } else if (doctor) {
-      req.user = { id: doctor.id };
+      req.user = { id: doctor.id, email: doctor.email };
     }
     next();
   } catch (error) {

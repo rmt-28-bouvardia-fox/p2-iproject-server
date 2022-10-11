@@ -1,5 +1,4 @@
 const errorHandler = (err, req, res, next) => {
-  console.log(err)
   let status = 500;
   let message = "Internal Server Error";
   if (err.name === "invalid_email") {
@@ -20,6 +19,12 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "invalid_token" || err.name === "JsonWebTokenError") {
     code = 401;
     message = `Please login first`;
+  } else if (err.name === "forbidden" ) {
+    code = 403;
+    message = `You are not authorized`;
+  } else if (err.name === "data_not_found" ) {
+    code = 404;
+    message = `Data not found`;
   }
   res.status(status).json({ message });
 };

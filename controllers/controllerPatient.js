@@ -14,7 +14,6 @@ const registerPatient = async (req, res, next) => {
     next(error);
   }
 };
-
 const loginPatient = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -34,7 +33,7 @@ const loginPatient = async (req, res, next) => {
     }
     const payload = {
       id: patient.id,
-      email: patient.email
+      email: patient.email,
     };
     const access_token = createToken(payload);
     res.status(200).json({ access_token });
@@ -44,7 +43,7 @@ const loginPatient = async (req, res, next) => {
 };
 const createDetail = async (req, res, next) => {
   try {
-    const id = +req.user.id
+    const id = +req.user.id;
     const { name, birthDate, address, gender, bloodType, diseaseHistory } =
       req.body;
     const patientDetail = await PatientDetail.create({
@@ -54,11 +53,41 @@ const createDetail = async (req, res, next) => {
       gender,
       bloodType,
       diseaseHistory,
-      PatientId: id
+      PatientId: id,
     });
-    res.status(201).json(patientDetail)
+    res.status(201).json(patientDetail);
   } catch (error) {
     next(error);
   }
 };
-module.exports = { registerPatient, loginPatient, createDetail };
+const updateDetail = async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+    const email = req.user.email;
+    const { name, birthDate, address, gender, bloodType, diseaseHistory } =
+      req.body;
+    const patientDetail = await PatientDetail.findOne({ where: { id } });
+    if (!patientDetail) {
+      throw { name: "data_not_found" };
+    }
+    const patient = await Patient.findOne({ where: { email } });
+    if (patientDetail.PatientId != patient.id) {
+      throw { name: "forbidden" };
+    }
+    await PatientDetail.update(
+      {
+        name,
+        birthDate,
+        address,
+        gender,
+        bloodType,
+        diseaseHistory,
+      },
+      { where: { id } }
+    );
+    res.status(200).json({ message: "Patient detail has been updated" });
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = { registerPatient, loginPatient, createDetail, updateDetail };
