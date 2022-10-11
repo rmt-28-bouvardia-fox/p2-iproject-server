@@ -1,6 +1,8 @@
 const {User} = require('../models')
 
 const axios = require('axios')
+const { compare } = require('../helper/bcrypt')
+const { createToken } = require('../helper/jwt')
 
 class Controller {
 
@@ -75,9 +77,31 @@ class Controller {
 
     static async login(req,res,next){
         try {
-            
+            const { email,password } =req.body
+            const user = await User.findOne({ where: { email } })
+
+            if(!user) throw {name:`invalid_credentials`}
+
+            const validate = compare(password,user.password)
+
+            if(!validate) throw {name:`invalid_credentials`}
+
+            const payload = {
+                id:user.id,
+                email:user.email,
+                username:user.username
+            }
+
+            const access_token = createToken(payload)
+
+            res.status(200).json({
+                access_token : access_token,
+                id:user.id,
+                status:user.status,
+                username:user.username
+            })
         } catch (err) {
-            
+            next(err)
         }
     }
 
