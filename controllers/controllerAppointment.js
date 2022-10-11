@@ -1,4 +1,4 @@
-const { Appointment } = require("../models");
+const { Appointment, ConsultationReport } = require("../models");
 
 const createAppointment = async (req, res, next) => {
   try {
@@ -11,12 +11,27 @@ const createAppointment = async (req, res, next) => {
       appointmentDate,
       status,
       DoctorId,
-      PatientId
+      PatientId,
     });
-    res.status(201).json(appointment)
+    res.status(201).json(appointment);
   } catch (error) {
     next(error);
   }
 };
-
-module.exports = { createAppointment };
+const createConsultReport = async (req, res, next) => {
+  try {
+    const AppointmentId = +req.params.appointmentId;
+    const { diagnosis, needSurgicalAction, needMedicalDrug, cost } = req.body;
+    const consultReport = await ConsultationReport.create({
+      diagnosis,
+      needSurgicalAction,
+      needMedicalDrug,
+      cost,
+      AppointmentId,
+    });
+    res.status(201).json(consultReport);
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = { createAppointment, createConsultReport };
