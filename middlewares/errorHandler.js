@@ -1,4 +1,5 @@
 const errorHandler = (err, req, res, next) => {
+  console.log(error)
   let code = 500;
   let message = "Internal Server Error";
 
@@ -23,6 +24,12 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "invalid_url") {
     code = 400;
     message = "Image url format is required";
+  } else if (err.name === "invalid_input") {
+    code = 400;
+    message = "Invalid input";
+  } else if (err.name === "imgflip_error") {
+    code = 400;
+    message = err.message;
   }
 
   res.status(code).json({ message });
