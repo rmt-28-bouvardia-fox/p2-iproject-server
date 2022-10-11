@@ -73,12 +73,29 @@ class ProductController {
 
   static async getAllList(req, res, next) {
     try {
-        const lists = await UserProduct.findAll({
-            include: [{model: Product, include: ['BidderProduct', 'OwnerProduct']}]
-        })
-        res.status(200).json(lists)
+      const lists = await UserProduct.findAll({
+        include: [
+          { model: Product, include: ["BidderProduct", "OwnerProduct"] },
+        ],
+      });
+      res.status(200).json(lists);
     } catch (error) {
-        next(error)
+      next(error);
+    }
+  }
+
+  static async deleteList(req, res, next) {
+    try {
+      const id = req.params.listId;
+      const list = await UserProduct.findByPk(id);
+      if (!list) {
+        throw { name: "invalid" };
+      }
+      const listId = +req.params.listId;
+      const deletedList = await UserProduct.destroy({ where: { id: listId } });
+      res.status(200).json({ message: `${list.id} succseed to deleted` });
+    } catch (error) {
+      next(error);
     }
   }
 }
