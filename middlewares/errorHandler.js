@@ -29,6 +29,9 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "imgflip_error") {
     code = 400;
     message = err.message;
+  } else if (err.name === "already_liked") {
+    code = 400;
+    message = "You already liked this post";
   }
 
   res.status(code).json({ message });

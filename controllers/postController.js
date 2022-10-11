@@ -1,12 +1,12 @@
 "use strict";
-const { Post, User } = require("../models");
+const { Post, User, Like } = require("../models");
 const axios = require("axios");
 
 class PostController {
   static async showAllPosts(req, res, next) {
     try {
       const posts = await Post.findAll({
-        include: User,
+        include: [User, Like],
         order: [["createdAt", "DESC"]],
       });
       res.status(200).json(posts);
@@ -60,6 +60,7 @@ class PostController {
   static async showUserPost(req, res, next) {
     try {
       const posts = await Post.findAll({
+        include: Like,
         where: { UserId: req.user.id },
       });
       res.status(200).json(posts);
@@ -118,6 +119,37 @@ class PostController {
       }
 
       res.status(200).json({ message: `Post with id ${post.id} updated` });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async likePost(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      const post = await Post.findByPk(id);
+      if (!post) {
+        throw { name: "post_not_found" };
+      }
+
+      const likeCheck = await Like.findOne({
+        where: {
+          UserId: req.user.id,
+          PostId: id,
+        },
+      });
+
+      if (likeCheck) {
+        throw { name: "already_liked" };
+      }
+
+      const status = await Like.create({
+        UserId: req.user.id,
+        PostId: id,
+      });
+
+      res.status(200).json(status);
     } catch (error) {
       next(error);
     }
