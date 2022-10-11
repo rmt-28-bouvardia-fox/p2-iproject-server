@@ -28,4 +28,15 @@ class Controller {
             next(error)
         }
     }
+    static async addMyArisan(req, res, next) {
+        try {
+            const add = await MyArisan.create({
+                UserId : req.user.id,
+                ArisanId : req.params.id
+            })
+            res.status(201).json({id : add.id, User : add.UserId})
+        } catch (error) {
+            next(error)
+        }
+    }
 }
