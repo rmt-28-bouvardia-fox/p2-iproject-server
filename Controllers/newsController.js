@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 class NewsController {
-  static async getNews(req, res, next) {
+  static async getTopHeadlinesNews(req, res, next) {
     try {
       const { data } = await axios({
         method: "get",
