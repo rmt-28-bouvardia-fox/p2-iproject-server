@@ -16,4 +16,16 @@ class Controller {
             next(error)
         }
     }
+    static async fetchMyArisan(req, res, next) {
+        try {
+            const result = await MyArisan.findAll({
+                where: {
+                    UserId : req.user.id
+                }
+            })
+            res.status(200).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
 }
