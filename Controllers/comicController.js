@@ -40,8 +40,8 @@ class ComicController{
                     hash : hash
                 }
             })
-
-            res.status(200).json(data)
+            const result = data.data.results
+            res.status(200).json(result)
         } catch (error) {
             res.status(500).json(error)
         }
