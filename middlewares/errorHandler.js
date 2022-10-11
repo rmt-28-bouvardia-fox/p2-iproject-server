@@ -1,4 +1,5 @@
 const errorHandler = (err, req, res, next) => {
+  console.log(err)
   let status = 500;
   let message = "Internal Server Error";
   if (err.name === "invalid_email") {
@@ -16,6 +17,9 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "invalid_credentials") {
     code = 401;
     message = `Invalid email or password`;
+  } else if (err.name === "invalid_token" || err.name === "JsonWebTokenError") {
+    code = 401;
+    message = `Please login first`;
   }
   res.status(status).json({ message });
 };

@@ -1,4 +1,4 @@
-const { Patient } = require("../models");
+const { Patient, PatientDetail } = require("../models");
 const { compare } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 
@@ -9,7 +9,7 @@ const registerPatient = async (req, res, next) => {
       email,
       password,
     });
-    res.status(201).json({id: patient.id, email: patient.email});
+    res.status(201).json({ id: patient.id, email: patient.email });
   } catch (error) {
     next(error);
   }
@@ -34,6 +34,7 @@ const loginPatient = async (req, res, next) => {
     }
     const payload = {
       id: patient.id,
+      email: patient.email
     };
     const access_token = createToken(payload);
     res.status(200).json({ access_token });
@@ -41,5 +42,23 @@ const loginPatient = async (req, res, next) => {
     next(error);
   }
 };
-
-module.exports = { registerPatient, loginPatient };
+const createDetail = async (req, res, next) => {
+  try {
+    const id = +req.user.id
+    const { name, birthDate, address, gender, bloodType, diseaseHistory } =
+      req.body;
+    const patientDetail = await PatientDetail.create({
+      name,
+      birthDate,
+      address,
+      gender,
+      bloodType,
+      diseaseHistory,
+      PatientId: id
+    });
+    res.status(201).json(patientDetail)
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = { registerPatient, loginPatient, createDetail };
