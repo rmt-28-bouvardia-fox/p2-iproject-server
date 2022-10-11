@@ -72,7 +72,14 @@ class ProductController {
   }
 
   static async getAllList(req, res, next) {
-
+    try {
+        const lists = await UserProduct.findAll({
+            include: [{model: Product, include: ['BidderProduct', 'OwnerProduct']}]
+        })
+        res.status(200).json(lists)
+    } catch (error) {
+        next(error)
+    }
   }
 }
 
