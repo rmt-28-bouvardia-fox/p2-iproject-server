@@ -20,6 +20,9 @@ const errorHandler = (error, req, res, next) => {
   ) {
     errorCode = 401;
     message = "Invalid authentication";
+  } else if (error.name === "Data not found") {
+    errorCode = 404;
+    message = "Data nof found";
   }
   res.status(errorCode).json({ message });
 };
