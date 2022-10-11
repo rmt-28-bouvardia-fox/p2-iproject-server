@@ -88,6 +88,14 @@ module.exports = (sequelize, DataTypes) => {
           notNull: { msg: "Wedding Location is required" },
         },
       },
+      coupleName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: { msg: "Couple name is required" },
+          notNull: { msg: "Couple name is required" },
+        },
+      },
     },
     {
       sequelize,
