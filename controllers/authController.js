@@ -113,14 +113,6 @@ class Controller {
         }
     }
 
-    static async facebook(req,res,next){
-        try {
-            
-        } catch (err) {
-            
-        }
-    }
-
 }
 
 module.exports = Controller
