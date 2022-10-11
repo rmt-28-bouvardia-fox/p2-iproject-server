@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: { msg: "Cost is required" },
         },
       },
-      AppointmnetId: {
+      AppointmentId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
