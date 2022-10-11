@@ -1,3 +1,4 @@
+const ms = require("ms")
 const { Op } = require("sequelize")
 const { Arisan, MyArisan, User, LogTran } = require("../models")
 
@@ -55,9 +56,15 @@ class Controller {
     }
     static async addTransaction(req, res, next) {
         try {
+            const { longtitude, latitude } = req.body
             const create = await LogTran.create({
                 UserId : req.user.id,
                 ArisanId : req.params.arisanId
+            })
+            await User.update({longtitude, latitude},{
+                where : {
+                    id : req.user.id
+                }
             })
             res.status(201).json({
                 id : create.UserId,
@@ -67,5 +74,15 @@ class Controller {
             next(error)
         }
     };
-    static async 
+    static async addArisan(req, res, next) {
+        try {
+            const {name, expiredAt } = req.body
+            const createArisan = await Arisan.create({
+                name,
+                expiredAt :moment( ms(expiredAt)).format('dddd, MMMM Do YYYY')
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
 }

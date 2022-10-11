@@ -21,5 +21,8 @@ c    }
     sequelize,
     modelName: 'Arisan',
   });
+  Arisan.beforeCreate((app, opt ) => {
+    app.people = 0
+  })
   return Arisan;
 };

@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   LogTran.init({
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     UserId: DataTypes.INTEGER,
     ArisanId: DataTypes.INTEGER,
     status: DataTypes.STRING

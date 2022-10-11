@@ -45,7 +45,10 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    address:{
+    longtitude:{
+      type : DataTypes.STRING,
+    },
+    latitude:{
       type : DataTypes.STRING,
     },
     phoneNumber: {
