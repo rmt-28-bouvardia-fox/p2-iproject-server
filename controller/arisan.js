@@ -41,7 +41,7 @@ class Controller {
     }
     static async fetchLogTransaction(req, res, next) {
         try {
-            const result = LogTrans.findAll({
+            const result = await LogTrans.findAll({
                 where : {
                     UserId : req.user.id
                 }
@@ -50,5 +50,19 @@ class Controller {
         } catch (error) {
             next(error)
         }
-    }   
+    }
+    static async addTransaction(req, res, next) {
+        try {
+            const create = await LogTrans.create({
+                UserId : req.user.id,
+                ArisanId : req.params.arisanId
+            })
+            res.status(201).json({
+                id : create.UserId,
+                Message : `created Log Transaction with Arisan Id : ${req.params.arisanId}`
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
 }
