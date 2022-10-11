@@ -27,10 +27,8 @@ class TeamController {
             if (!team) {
                 throw { name: 'invalid_credentials' }
             }
-            console.log(team);
             res.status(200).json(team)
         } catch (error) {
-            console.log(error);
             next(error)
         }
     }
@@ -43,7 +41,6 @@ class TeamController {
             if (!player) {
                 throw{name: 'no_credentials'}
             }
-
 
             const myPlayer = await MyPlayer.findOne({ where: { PlayerId: player.id, TeamId } })
             if (myPlayer) {
@@ -65,12 +62,13 @@ class TeamController {
             }      
             const team = await Team.findOne({where: {id: TeamId}})
             if (team.money < price) {
-                throw { name: 'error buy' }
+                throw { name: 'error_buy' }
             }
             await MyPlayer.create({ TeamId, PlayerId: player.id })
             await Team.decrement({ money: price }, { where: { id: TeamId } })           
             res.status(201).json({ message: `Success buy ${player.name} for ${team.name}`})
         } catch (error) {
+            console.log(error);
             next(error)
         }
     }
@@ -90,12 +88,11 @@ class TeamController {
             const price = 1000
             const team = await Team.findOne({where: {id:TeamId}})
             if (team.money < price) {
-                throw { name: 'error buy' }
+                throw { name: 'error_buy', err: `Your don't have enough money!` }
             }
             await MyPlayer.create({ TeamId, PlayerId: randomNumber })
             Team.decrement({ money: price }, { where: { id: TeamId } })
-            res.status(201).json(player)
-            // res.status(201).json({ message: `Success recruit ${ player.name } for ${team.name}` })
+            res.status(201).json({ message: `Success recruit ${ player.name } for ${team.name}` })
         } catch (error) {
             next(error)
         }

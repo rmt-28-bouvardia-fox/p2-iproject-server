@@ -23,10 +23,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     TeamId: DataTypes.INTEGER,
-    PlayerId: DataTypes.INTEGER
+    PlayerId: DataTypes.INTEGER,
+    starter: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'MyPlayer',
+    hooks: {
+      beforeCreate(myPlayer) {
+        myPlayer.starter = false
+      }
+    }
   });
   return MyPlayer;
 };
