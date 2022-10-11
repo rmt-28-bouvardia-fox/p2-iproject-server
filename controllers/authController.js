@@ -41,18 +41,29 @@ class Controller {
                     text:`send email`
                     }
 
-                transporter.sendMail(mailOption,(err,info) => {
+                const user = await User.findOne({
+                    where:{
+                        email:email
+                    }
+                })
+
+                if(!user){
+                    transporter.sendMail(mailOption,(err,info) => {
                     if(err) throw err
                     User.create({
                     username,
                     email,
                     password
-                })
-                .then(() => {
-                    res.status(201).json({message:`Created`})
-                })
-                .catch(err => console.log(err))
-                })
+                    })
+                    .then(() => {
+                        res.status(201).json({message:`Created`})
+                    })
+                    .catch(err => next(err))
+                    })
+                }
+                else{
+                    throw {name:`email unique`}
+                }
             }
             else{
                 throw {name:`invalid_credentials`}
