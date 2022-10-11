@@ -11,6 +11,21 @@ class ProductController {
       next(error);
     }
   }
+  static async findOne(req, res, next) {
+    try {
+        const id = +req.params.id;
+        const product = await Product.findOne({
+            include: ['OwnerProduct']
+        }, {where: {id}});
+        if (product === null) {
+          throw { name: "invalid" };
+        } else {
+          res.status(200).json(product);
+        }
+      } catch (error) {
+        next(error);
+      }
+  }
 }
 
 module.exports = ProductController;
