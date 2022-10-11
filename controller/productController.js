@@ -1,4 +1,4 @@
-const { Product, User, OwnerProduct } = require("../models");
+const { Product, User, UserProduct } = require("../models");
 
 class ProductController {
   static async getAll(req, res, next) {
@@ -45,10 +45,34 @@ class ProductController {
         },
         { where: { id: productId } }
       );
-      res.status(200).json({message: `new bid by ${req.user.username} on ${product.name}`})
+      res.status(200).json({
+        message: `new bid by ${req.user.username} on ${product.name}`,
+      });
     } catch (error) {
-        next(error)
+      next(error);
     }
+  }
+
+  static async newList(req, res, next) {
+    try {
+      const productId = +req.params.productId;
+      const userId = req.user.id;
+      const product = await Product.findByPk(productId);
+      if (!product) {
+        throw { name: "invalid" };
+      }
+      const userProduct = await UserProduct.create({
+        UserId: userId,
+        ProductId: productId,
+      });
+      res.status(201).json(userProduct);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAllList(req, res, next) {
+
   }
 }
 

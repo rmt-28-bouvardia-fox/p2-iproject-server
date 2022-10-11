@@ -13,4 +13,6 @@ router.get('/products', ProductController.getAll)
 router.get('/products/:id', ProductController.findOne)
 router.patch('/startBid/:id', ProductController.startBid)
 
+router.post('/myBidList/:productId', ProductController.newList)
+router.get('/myBidList', ProductController.getAllList)
 module.exports = router
