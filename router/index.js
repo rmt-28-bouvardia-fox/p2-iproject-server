@@ -11,5 +11,6 @@ router.use(authentication)
 
 router.get('/products', ProductController.getAll)
 router.get('/products/:id', ProductController.findOne)
+router.patch('/startBid/:id', ProductController.startBid)
 
 module.exports = router
