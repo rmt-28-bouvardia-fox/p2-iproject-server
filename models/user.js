@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { hash } = require('../helpers/bcrypt');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -17,58 +18,41 @@ module.exports = (sequelize, DataTypes) => {
     email:{
       type : DataTypes.STRING,
       validate : {
-        isEmail : {
-          msg : "must be an email format"
-        },
+       isEmail : {
+        msg : "Must be email format"
+       },
         notEmpty : {
-          msg : "Email cannot be empty"
-        },
-        isNull : {
-          msg : "Email cannot be empty"
+          msg : "Password cannot be empty, please insert Password"
         }
       }
     },
     username:{
       type : DataTypes.STRING,
       validate : {
+        min : 6,
         notEmpty : {
-          msg : "Username cannot be empty"
-        },
-        isNull : {
-          msg : "Username cannot be empty"
+          msg : "Password cannot be empty, please insert Password"
         }
       }
     },
     password:{
       type : DataTypes.STRING,
       validate : {
+        min : 6,
         notEmpty : {
-          msg : "Password cannot be empty"
-        },
-        isNull : {
-          msg : "Password cannot be empty"
+          msg : "Password cannot be empty, please insert Password"
         }
       }
     },
     address:{
       type : DataTypes.STRING,
-      validate : {
-        notEmpty : {
-          msg : "Address cannot be empty"
-        },
-        isNull : {
-          msg : "Address cannot be empty"
-        }
-      }
     },
     phoneNumber: {
       type : DataTypes.STRING,
       validate : {
+        min : 11,
         notEmpty : {
-          msg : "Phone Number cannot be empty"
-        },
-        isNull : {
-          msg : "Phone Number cannot be empty"
+          msg : "Phone number cannot be empty, please insert Password"
         }
       }
     },
@@ -76,5 +60,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
   });
+  User.beforeCreate((app, opt) => {
+    app.password = hash(app.password)
+  })
   return User;
 };

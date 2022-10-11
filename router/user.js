@@ -1,10 +1,9 @@
 const UserController = require("../controller/userController")
+const user = require("express").Router()
 
-const app = require("express").Router()
+user.post("/login", UserController.LoginUser)
+user.post("/register", UserController.registerUser)
+user.post("/google-sign-in", UserController)
+user.post("/facebook-sign-in", UserController)
 
-app.post("/login", UserController.LoginUser)
-app.post("/register")
-app.post("/google-sign-in")
-app.post("/facebook-sign-in")
-
-module.exports = app
+module.exports = user
