@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Curly Kale",
+        "description": "Hidroponic",
+        "price": 60000,
+        "status": "open",
+        "imgUrl": "https://cdn.isellercommerce.com/9152fc6738964c51bf5f9cb7571922f1/b1ca4e8ca0644cbfb279c86b478f791f.jpg",
+        "OwnerId": 1,
+        "BidderId": null
+    },
+    {
+        "name": "Curly Kale",
+        "description": "Conventional",
+        "price": 45000,
+        "status": "open",
+        "imgUrl": "https://images.tokopedia.net/img/cache/500-square/VqbcmM/2020/11/17/8e8ea6aa-d7ac-4eca-8697-7fe05c40704c.jpg",
+        "OwnerId": 1,
+        "BidderId": null
+    },
+    {
+        "name": "Baby Cos",
+        "description": "Hidroponic",
+        "price": 65000,
+        "status": "open",
+        "imgUrl": "https://images.tokopedia.net/img/cache/700/product-1/2019/4/29/710165/710165_004c7d81-d579-4adf-9074-073786e763d8_499_499.jpg",
+        "OwnerId": 1,
+        "BidderId": null
+    },
+    {
+        "name": "Rosemery",
+        "description": "Herb",
+        "price": 75000,
+        "status": "open",
+        "imgUrl": "https://5.imimg.com/data5/CG/HD/MY-53702158/rosemary-leave-500x500.jpg",
+        "OwnerId": 2,
+        "BidderId": null
+    },
+    {
+        "name": "Mint",
+        "description": "Herb",
+        "price": 50000,
+        "status": "open",
+        "imgUrl": "https://www.pasarlampung.com/wp-content/uploads/2020/04/daun-mint-pasar-lampung.jpg",
+        "OwnerId": 2,
+        "BidderId": null
+    }
+]
