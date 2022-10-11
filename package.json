@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "sequelize-cli": "^6.5.1"
   },
   "name": "p2-iproject-server-1",
   "description": "Individual Project - Server",

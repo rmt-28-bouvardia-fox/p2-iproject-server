@@ -1,5 +1,5 @@
 const { Op } = require("sequelize")
-const { Arisan, MyArisan, User, LogTrans } = require("../models")
+const { Arisan, MyArisan, User, LogTran } = require("../models")
 
 class Controller {
     static async fetchArisan(req, res, next) {
@@ -21,7 +21,8 @@ class Controller {
             const result = await MyArisan.findAll({
                 where: {
                     UserId : req.user.id
-                }
+                },
+                include : [Arisan]
             })
             res.status(200).json(result)
         } catch (error) {
@@ -41,10 +42,11 @@ class Controller {
     }
     static async fetchLogTransaction(req, res, next) {
         try {
-            const result = await LogTrans.findAll({
+            const result = await LogTran.findAll({
                 where : {
                     UserId : req.user.id
-                }
+                },
+                include : [User, Arisan]
             })
             res.status(200).json(result)
         } catch (error) {
@@ -53,7 +55,7 @@ class Controller {
     }
     static async addTransaction(req, res, next) {
         try {
-            const create = await LogTrans.create({
+            const create = await LogTran.create({
                 UserId : req.user.id,
                 ArisanId : req.params.arisanId
             })
@@ -65,5 +67,5 @@ class Controller {
             next(error)
         }
     };
-    
+    static async 
 }
