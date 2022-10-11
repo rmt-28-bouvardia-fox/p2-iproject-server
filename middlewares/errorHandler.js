@@ -32,6 +32,9 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "already_liked") {
     code = 400;
     message = "You already liked this post";
+  } else if (err.name === "the_end") {
+    code = 404;
+    message = "Sorry, nothing further here";
   }
 
   res.status(code).json({ message });

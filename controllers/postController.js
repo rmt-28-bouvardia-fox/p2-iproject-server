@@ -5,11 +5,37 @@ const axios = require("axios");
 class PostController {
   static async showAllPosts(req, res, next) {
     try {
-      const posts = await Post.findAll({
+      const { page } = req.query;
+
+      const postsRaw = await Post.findAll();
+
+      const limit = 3;
+      const offset = page ? page * limit : 0;
+
+      let options = {
+        limit: limit,
+        offset: offset,
         include: [User, Like],
-        order: [["createdAt", "DESC"]],
-      });
-      res.status(200).json(posts);
+        order: [["id", "DESC"]],
+      };
+
+      const posts = await Post.findAndCountAll(options);
+
+      const pageData = (data, page, limit, totalItems) => {
+        const { rows: posts } = data;
+        const currentPage = page ? +page : 0;
+        const totalPages = Math.ceil(totalItems / limit);
+
+        return { totalItems, posts, totalPages, currentPage };
+      };
+
+      const result = pageData(posts, page, limit, postsRaw.length);
+
+      if (result.posts.length === 0) {
+        throw { name: "the_end" };
+      }
+
+      res.status(200).json(result);
     } catch (error) {
       next(error);
     }
@@ -50,6 +76,8 @@ class PostController {
       if (!memes.data.success) {
         throw { name: "imgflip_error", message: memes.data.error_message };
       }
+
+      
 
       res.status(201).json(memes.data.data.memes);
     } catch (error) {
