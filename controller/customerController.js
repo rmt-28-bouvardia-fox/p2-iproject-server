@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Wishlist } = require("../models");
 const { createToken } = require("../helpers/jwt");
 const { compare } = require("../helpers/bcrypt");
 const axios = require("axios");
@@ -70,6 +70,43 @@ class Controller {
         url: `https://www.cheapshark.com/api/1.0/games?title=${title}`,
       });
       res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async addWishlist(req, res, next) {
+    try {
+      const { dataGame } = req.body;
+      await Wishlist.create({ UserId: req.user.id, dataGame });
+      res.status(201).json({ message: "sukses add wishlist" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async fetchWishlist(req, res, next) {
+    try {
+      const findWishlist = await Wishlist.findAll({
+        where: { UserId: req.user.id },
+      });
+      res.status(200).json(findWishlist);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteWishlist(req, res, next) {
+    try {
+      let id = req.params.id;
+      const findWish = await Wishlist.findOne({ where: { id } });
+      if (!findWish) {
+        throw { name: "data not found" };
+      }
+      await Wishlist.destroy({
+        where: { id },
+      });
+      res.status(200).json({ message: `success remove wishlist` });
     } catch (error) {
       next(error);
     }
