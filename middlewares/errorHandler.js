@@ -13,7 +13,7 @@ const errorHandler = (err, req, res, next) => {
     message = "Email already Used";
   } else if (err.name === "invalid_credential") {
     code = 401;
-    message = "Username / Password Invalid";
+    message = "Username / Password Incorrect";
   } else if (err.name === "invalid_token" || err.name === "JsonWebTokenError") {
     code = 401;
     message = "Invalid Token";
