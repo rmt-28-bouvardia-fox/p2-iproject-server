@@ -2,6 +2,19 @@ const { Patient } = require("../models");
 const { compare } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 
+const registerPatient = async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const patient = await Patient.create({
+      email,
+      password,
+    });
+    res.status(201).json({id: patient.id, email: patient.email});
+  } catch (error) {
+    next(error);
+  }
+};
+
 const loginPatient = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -11,16 +24,16 @@ const loginPatient = async (req, res, next) => {
     if (!password) {
       throw { name: `invalid_password` };
     }
-    const user = await Patient.findOne({ where: { email } });
-    if (!user) {
+    const patient = await Patient.findOne({ where: { email } });
+    if (!patient) {
       throw { name: `invalid_credentials` };
     }
-    const passwordValidate = compare(password, user.password);
+    const passwordValidate = compare(password, patient.password);
     if (!passwordValidate) {
       throw { name: `invalid_credentials` };
     }
     const payload = {
-      id: user.id,
+      id: patient.id,
     };
     const access_token = createToken(payload);
     res.status(200).json({ access_token });
@@ -29,4 +42,4 @@ const loginPatient = async (req, res, next) => {
   }
 };
 
-module.exports = { loginPatient };
+module.exports = { registerPatient, loginPatient };
