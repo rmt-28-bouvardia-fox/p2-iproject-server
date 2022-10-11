@@ -36,8 +36,8 @@ const getAllSymptom = async (req, res, next) => {
   }
 };
 const getAllSpecialist = async (req, res, next) => {
-  const { symptoms, gender, year_of_birth } = req.query;
   try {
+    const { symptoms, gender, year_of_birth } = req.query;
     const { data } = await axios({
       method: "get",
       url: "https://sandbox-healthservice.priaid.ch/diagnosis/specialisations",
@@ -54,6 +54,25 @@ const getAllSpecialist = async (req, res, next) => {
     next(error);
   }
 };
+const getDiagnosis = async(req, res, next) => {
+  try {
+    const { symptoms, gender, year_of_birth } = req.query;
+    const { data } = await axios({
+      method: "get",
+      url: "https://sandbox-healthservice.priaid.ch/diagnosis",
+      params: {
+        token: API_MEDIC_KEY,
+        symptoms,
+        gender,
+        year_of_birth,
+        language: "en-gb"
+      },
+    });
+    res.status(200).json(data)
+  } catch (error) {
+    next(error)
+  }
+}
 const createConsultReport = async (req, res, next) => {
   try {
     const AppointmentId = +req.params.appointmentId;
@@ -90,6 +109,7 @@ const getAllPatientAppointment = async (req, res, next) => {
     next(error);
   }
 };
+
 const getAllDoctorAppointment = async (req, res, next) => {
   try {
     const id = +req.user.id;
@@ -108,6 +128,7 @@ module.exports = {
   createAppointment,
   getAllSymptom,
   getAllSpecialist,
+  getDiagnosis,
   createConsultReport,
   getAllPatientAppointment,
   getAllDoctorAppointment,
