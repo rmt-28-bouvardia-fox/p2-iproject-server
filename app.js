@@ -48,7 +48,9 @@ app.post("/login", async (req, res, next) => {
 
     const access_token = signToken(payload, "secretkey");
 
-    res.status(200).json({ access_token });
+    console.log(user);
+
+    res.status(200).json({ access_token, username: user.username });
   } catch (error) {
     next(error);
   }
@@ -90,36 +92,72 @@ app.post("/getCardDetails", async (req, res, next) => {
   }
 });
 
+app.get("/searchCard", async (req, res, next) => {
+  try {
+    const { query, offset, num } = req.query;
+
+    let params = {};
+
+    if (query) {
+      params.fname = query;
+    }
+
+    if (offset && num) {
+      params.offset = offset;
+      params.num = num;
+    } else {
+      params.offset = 0;
+      params.num = 5;
+    }
+
+    const { data } = await axios({
+      url: "https://db.ygoprodeck.com/api/v7/cardinfo.php",
+      method: "GET",
+      params,
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // AUTHENTICATION
 app.use(authentication);
 
 app.post("/bids", async (req, res, next) => {
   try {
-    const { cardId, expiredBy, startPrice } = req.body;
+    const { cardId, expiredBy, startPrice, notes, condition } = req.body;
 
     if (!cardId) {
-      throw { name: "cardId_not_provided" };
+      throw { name: "cardId_is_required" };
     }
 
     if (!expiredBy) {
-      throw { name: "expiredBy_not_provided" };
+      throw { name: "expiredBy_is_required" };
     }
 
     if (!startPrice) {
-      throw { name: "startPrice_not_provided" };
+      throw { name: "startPrice_is_required" };
+    }
+
+    if (startPrice < 1000) {
+      throw { name: "startPrice_min_1000" };
     }
 
     let expired = new Date(expiredBy);
 
-    const data = await push(dbRef, {
+    await push(dbRef, {
       sellerId: req.user.id,
+      createdBy: req.user.username,
       buyerId: "",
       cardId: cardId,
       createdAt: new Date().getTime(),
+      condition: condition,
       startPrice: startPrice,
       currentPrice: startPrice,
       expiredBy: expired.getTime(),
-      note: "abc",
+      note: notes,
     });
 
     res.status(200).json({ message: "Success add new bid" });
