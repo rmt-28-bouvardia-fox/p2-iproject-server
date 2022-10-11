@@ -34,4 +34,43 @@ const createConsultReport = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { createAppointment, createConsultReport };
+const getAllPatientAppointment = async (req, res, next) => {
+  try {
+    const id = +req.user.id;
+    const appointments = await Appointment.findAll({
+      where: { PatientId: id },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+      include: {
+        model: ConsultationReport,
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+      },
+    });
+    res.status(200).json(appointments);
+  } catch (error) {
+    next(error);
+  }
+};
+const getAllDoctorAppointment = async (req, res, next) => {
+  try {
+    const id = +req.user.id;
+    const appointments = await Appointment.findAll({
+      where: { DoctorId: id },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+    res.status(200).json(appointments);
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = {
+  createAppointment,
+  createConsultReport,
+  getAllPatientAppointment,
+  getAllDoctorAppointment,
+};

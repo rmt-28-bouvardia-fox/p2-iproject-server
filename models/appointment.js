@@ -18,6 +18,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Appointment.init(
     {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER
+      },
       chiefComplaint: {
         type: DataTypes.STRING,
         allowNull: false,
