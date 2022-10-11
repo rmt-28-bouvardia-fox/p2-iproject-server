@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Appointment extends Model {
     /**
@@ -11,18 +9,64 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Appointment.belongsTo(models.Patient, { foreignKey: "PatientId" });
+      Appointment.belongsTo(models.Doctor, { foreignKey: "DoctorId" });
+      Appointment.hasOne(models.ConsultationReport, {
+        foreignKey: "AppointmentId",
+      });
     }
   }
-  Appointment.init({
-    chiefComplaint: DataTypes.STRING,
-    symptom: DataTypes.STRING,
-    appointmentDate: DataTypes.DATE,
-    status: DataTypes.STRING,
-    PatientId: DataTypes.INTEGER,
-    DoctorId: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Appointment',
+  Appointment.init(
+    {
+      chiefComplaint: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Chief complaint is required" },
+          notEmpty: { msg: "Chief complaint is required" },
+        },
+      },
+      symptom: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Symptom is required" },
+          notEmpty: { msg: "Symptom is required" },
+        },
+      },
+      appointmentDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Appointment date is required" },
+          notEmpty: { msg: "Appointment date is required" },
+        },
+      },
+      status: DataTypes.STRING,
+      PatientId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Patient id is required" },
+          notEmpty: { msg: "Patient id is required" },
+        },
+      },
+      DoctorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Doctor id is required" },
+          notEmpty: { msg: "Doctor id is required" },
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "Appointment",
+    }
+  );
+  Appointment.beforeCreate((appointment) => {
+    appointment.status = "Uncomplete";
   });
   return Appointment;
 };
