@@ -1,4 +1,4 @@
-const { Invitation } = require("./../models");
+const { Invitation, Template } = require("./../models");
 
 class Controller {
   static async createInvitation(req, res, next) {
@@ -121,6 +121,15 @@ class Controller {
 
       res.status(200).json("Success");
     } catch (error) {
+      next(error);
+    }
+  }
+  static async getTemplate(req, res, next) {
+    try {
+      const template = await Template.findAll()
+      res.status(200).json(template);
+    } catch (error) {
+      console.log(error)
       next(error);
     }
   }
