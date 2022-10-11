@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'LogTran',
   });
   LogTran.beforeCreate((app, opt) => {
-    app.status = "Unpayed"
+    app.status = "Pending"
   })
   return LogTran;
 };

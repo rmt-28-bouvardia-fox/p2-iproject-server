@@ -32,11 +32,16 @@ class Controller {
     }
     static async addMyArisan(req, res, next) {
         try {
-            const add = await MyArisan.create({
-                UserId : req.user.id,
-                ArisanId : req.params.id
-            })
-            res.status(201).json({id : add.id, User : add.UserId})
+            const find = await MyArisan.findOne({where : {ArisanId : req.params.id, UserId : req.user.id}})
+            if(find){
+                throw { name : "Arisan Already exists"}
+            } else {
+                const add = await MyArisan.create({
+                    UserId : req.user.id,
+                    ArisanId : req.params.id
+                })
+                res.status(201).json({id : add.id, User : add.UserId})
+            }
         } catch (error) {
             next(error)
         }
@@ -81,6 +86,19 @@ class Controller {
                 name,
                 expiredAt :moment( ms(expiredAt)).format('dddd, MMMM Do YYYY')
             })
+        } catch (error) {
+            next(error)
+        }
+    },
+    static async payTrans (req, res, next) {
+        try {
+            const update = await LogTran.update({status : "Success"},{
+                where : {
+                    UserId : req.user.id,
+                    ArisanId : req.params.id
+                }
+            })
+            res.status(200).json({message : "Updated status transaction into Success"})
         } catch (error) {
             next(error)
         }
