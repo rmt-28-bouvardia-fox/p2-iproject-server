@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       status: DataTypes.STRING,
       PatientId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notNull: { msg: "Patient id is required" },
@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       DoctorId: {
-        type: DataTypes.DATE,
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notNull: { msg: "Doctor id is required" },

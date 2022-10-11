@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       SpecialistId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notNull: { msg: "Specialist id is required" },
