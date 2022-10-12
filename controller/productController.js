@@ -1,4 +1,5 @@
 const { Product, User, UserProduct } = require("../models");
+const nodemailer = require("nodemailer");
 
 class ProductController {
   static async getAll(req, res, next) {
@@ -38,7 +39,7 @@ class ProductController {
       }
       const bidded = await Product.update(
         {
-          price: product.price + 5000,
+          price: product.price + 2000,
           BidderId: userId,
         },
         { where: { id: productId } }
@@ -48,6 +49,34 @@ class ProductController {
       });
     } catch (error) {
       next(error);
+    }
+  }
+
+  static async mailer(req, res, next) {
+    try {
+      // console.log(req.user.email)
+      const transporter = nodemailer.createTransport({
+        service: "hotmail",
+        auth: {
+          user: "ban.ceban@hotmail.com",
+          pass: process.env.GMAIL_PASS,
+        },
+      });
+      const mailOptions = {
+        from: "ban.ceban@hotmail.com",
+        to: req.user.email,
+        subject: "Happy Bidding",
+        text: "Your bid has been updated!, you're the first in line!",
+      };
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) throw err;
+        console.log("Email sent: " + info.response);
+      });
+      res
+        .status(200)
+        .json({ message: "notification has been send to your email" });
+    } catch (error) {
+      next(error)
     }
   }
 
