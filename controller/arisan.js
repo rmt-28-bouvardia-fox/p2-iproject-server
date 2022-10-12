@@ -1,4 +1,5 @@
 const ms = require("ms")
+const nodemailer = require("nodemailer")
 const { Op } = require("sequelize")
 const { Arisan, MyArisan, User, LogTran } = require("../models")
 
@@ -56,6 +57,33 @@ class Controller {
                         id : req.user.id
                     }
                 })
+                const transporter = nodemailer.createTransport({
+                    host : "smtp.gmail.com",
+                    port : 587,
+                    auth : {
+                        user :"nissinwaffer2000@gmail.com",
+                        pass :"xejduwhcsuzvpzhc"
+                    },
+                    tls : {
+                        rejectUnauthorized : false
+                    }
+                })
+                
+                const options = {
+                    from :"nissinwaffer2000@gmail.com",
+                    to :"tribagus0510@gmail.com",
+                    subject : "Tagihan Arisan",
+                    text : "Tagihan hari ini adalah \n" + `https://link.dana.id/minta/2r5xsk35jr6`
+                }
+                
+                transporter.sendMail(options, (err, info) => {
+                    if(err) {
+                        console.log(err)
+                        return;
+                    } else {
+                        console.log("Sent email : " + info.response)
+                    }
+                })
                 res.status(201).json({id : add.id, User : add.UserId})
             }
         } catch (error) {
@@ -109,6 +137,33 @@ class Controller {
             await User.update({longtitude, latitude},{
                 where : {
                     id : req.user.id
+                }
+            })
+            const transporter = nodemailer.createTransport({
+                host : "smtp.gmail.com",
+                port : 587,
+                auth : {
+                    user :"nissinwaffer2000@gmail.com",
+                    pass :"xejduwhcsuzvpzhc"
+                },
+                tls : {
+                    rejectUnauthorized : false
+                }
+            })
+            
+            const options = {
+                from :"nissinwaffer2000@gmail.com",
+                to :"tribagus0510@gmail.com",
+                subject : "Tagihan Arisan",
+                text : "Tagihan hari ini adalah \n" + `https://link.dana.id/minta/2r5xsk35jr6`
+            }
+            
+            transporter.sendMail(options, (err, info) => {
+                if(err) {
+                    console.log(err)
+                    return;
+                } else {
+                    console.log("Sent email : " + info.response)
                 }
             })
             res.status(200).json({message : "Updated status transaction into Success"})
