@@ -15,6 +15,9 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "invalid token" || err.name === "JsonWebTokenError") {
     code = 401;
     message = "invalid token";
+  } else if (err.name === "NOTFOUND") {
+    code = 404;
+    message = "Recipe Not Found";
   }
 
   res.status(code).json({ message });

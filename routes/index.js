@@ -2,8 +2,10 @@
 
 const router = require("express").Router();
 const userRouter = require("./userRouter");
+const recipeRouter = require("./recipeRouter");
 
 router.use("/users", userRouter);
+router.use("/recipes", recipeRouter);
 
 //authentication
 // router.use(authentication);
