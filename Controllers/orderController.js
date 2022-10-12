@@ -50,7 +50,6 @@ class OrderController {
             serverKey : serverKey
         });
         const order_id = new Date().getTime()
-        console.log(order_id)
         const cart = await Order.findAll({where : {UserId : req.user.id}})
         const id = cart.map(el => {
             return el.id
@@ -85,7 +84,6 @@ class OrderController {
 
     static async updateStatus(req,res,next){
         try {
-            console.log(req.body)
             const {order_id} = req.body
             await Order.update({status : 'paid'}, {where : {order_id}})
 
