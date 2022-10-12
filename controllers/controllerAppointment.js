@@ -1,4 +1,4 @@
-const { Appointment, ConsultationReport } = require("../models");
+const { Patient, PatientDetail, Appointment, ConsultationReport } = require("../models");
 const axios = require("axios");
 const API_MEDIC_KEY = process.env.API_MEDIC_KEY;
 
@@ -37,7 +37,14 @@ const getAllSymptom = async (req, res, next) => {
 };
 const getAllSpecialist = async (req, res, next) => {
   try {
-    const { symptoms, gender, year_of_birth } = req.query;
+    const email = req.user.email;
+    const patient = await Patient.findOne({ where: { email }, include: PatientDetail });
+    if (!patient) {
+      throw { name: "data_not_found" };
+    }
+    const gender = patient.PatientDetail.gender.toLowerCase()
+    const year_of_birth = patient.PatientDetail.birthDate.getFullYear()
+    const { symptoms } = req.query;
     const { data } = await axios({
       method: "get",
       url: "https://sandbox-healthservice.priaid.ch/diagnosis/specialisations",
@@ -46,15 +53,15 @@ const getAllSpecialist = async (req, res, next) => {
         symptoms,
         gender,
         year_of_birth,
-        language: "en-gb"
+        language: "en-gb",
       },
     });
-    res.status(200).json(data)
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }
 };
-const getDiagnosis = async(req, res, next) => {
+const getDiagnosis = async (req, res, next) => {
   try {
     const { symptoms, gender, year_of_birth } = req.query;
     const { data } = await axios({
@@ -65,14 +72,14 @@ const getDiagnosis = async(req, res, next) => {
         symptoms,
         gender,
         year_of_birth,
-        language: "en-gb"
+        language: "en-gb",
       },
     });
-    res.status(200).json(data)
+    res.status(200).json(data);
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 const createConsultReport = async (req, res, next) => {
   try {
     const AppointmentId = +req.params.appointmentId;
