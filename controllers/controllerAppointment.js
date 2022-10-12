@@ -72,7 +72,21 @@ const getAllSpecialist = async (req, res, next) => {
 };
 const getDiagnosis = async (req, res, next) => {
   try {
-    const { symptoms, gender, year_of_birth } = req.query;
+    const { appointmentId } = req.query;
+    const appointment = await Appointment.findOne({
+      where: { id: appointmentId },
+    });
+    const patientId = appointment.PatientId;
+    const symptoms = `[${appointment.symptom}]`
+    const patient = await Patient.findOne({
+      where: { id: patientId },
+      include: PatientDetail,
+    });
+    if (!patient) {
+      throw { name: "data_not_found" };
+    }
+    const gender = patient.PatientDetail.gender.toLowerCase();
+    const year_of_birth = patient.PatientDetail.birthDate.getFullYear();
     const { data } = await axios({
       method: "get",
       url: "https://sandbox-healthservice.priaid.ch/diagnosis",
@@ -100,10 +114,16 @@ const createConsultReport = async (req, res, next) => {
       cost,
       AppointmentId,
     });
-    await Appointment.update({status: "Complete"}, {where: {id: AppointmentId}})
-    res.status(201).json({message: "Consultation report created, appointment status updated"});
+    await Appointment.update(
+      { status: "Complete" },
+      { where: { id: AppointmentId } }
+    );
+    res
+      .status(201)
+      .json({
+        message: "Consultation report created, appointment status updated",
+      });
   } catch (error) {
-    console.log(error)
     next(error);
   }
 };
@@ -115,15 +135,18 @@ const getAllPatientAppointment = async (req, res, next) => {
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
-      include: [{
-        model: ConsultationReport,
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
+      include: [
+        {
+          model: ConsultationReport,
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
         },
-      }, {
-        model: Doctor,
-        attributes: ["name"]
-      }],
+        {
+          model: Doctor,
+          attributes: ["name"],
+        },
+      ],
     });
     res.status(200).json(appointments);
   } catch (error) {
@@ -140,12 +163,12 @@ const getAllDoctorAppointment = async (req, res, next) => {
       },
       include: {
         model: Patient,
-        attributes: ['id'],
+        attributes: ["id"],
         include: {
           model: PatientDetail,
-          attributes: ['name']
-        }
-      }
+          attributes: ["name"],
+        },
+      },
     });
     res.status(200).json(appointments);
   } catch (error) {
