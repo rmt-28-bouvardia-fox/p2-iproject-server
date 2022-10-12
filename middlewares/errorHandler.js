@@ -2,8 +2,6 @@ const errorHandler = (err, req, res, next) => {
   let code = 500;
   let message = "Internal Server Error";
 
-  console.log(err);
-
   if (err.name == "AxiosError" && err.response.status) {
     code = 404;
     message = "Card not found";
@@ -19,6 +17,15 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "id_is_required") {
     code = 400;
     message = "Id is required";
+  } else if (err.name === "currentPrice_is_required") {
+    code = 400;
+    message = "Current Price is required";
+  } else if (err.name === "bid_less_than_currentPrice") {
+    code = 400;
+    message = "Bid must be higher than Current Bid";
+  } else if (err.name === "already_bidded") {
+    code = 400;
+    message = "You already bid on this item";
   } else if (err.name === "cardId_is_required") {
     code = 400;
     message = "Card Id is required";

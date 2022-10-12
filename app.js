@@ -9,7 +9,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const app = express();
 const port = 3000;
 
-const { ref, get, push, child } = require("firebase/database");
+const { ref, get, push, child, update } = require("firebase/database");
 const dbRef = ref(firebase, "/bids");
 
 const { User } = require("./models");
@@ -92,6 +92,12 @@ app.get("/bid/:id", async (req, res, next) => {
       cardDetail,
     };
 
+    const { access_token } = req.headers;
+
+    if (access_token) {
+      User.findOne();
+    }
+
     res.status(200).json(detailBid);
   } catch (error) {
     next(error);
@@ -155,6 +161,14 @@ app.get("/searchCard", async (req, res, next) => {
 // AUTHENTICATION
 app.use(authentication);
 
+app.get("/user", async (req, res, next) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.post("/bids", async (req, res, next) => {
   try {
     const { cardId, expiredBy, startPrice, notes, condition } = req.body;
@@ -191,6 +205,43 @@ app.post("/bids", async (req, res, next) => {
     });
 
     res.status(200).json({ message: "Success add new bid" });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.patch("/bid/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    let { currentPrice } = req.body;
+
+    if (!id) {
+      throw { name: "id_is_required" };
+    }
+
+    if (!currentPrice) {
+      throw { name: "currentPrice_is_required" };
+    }
+
+    const bid = await get(child(dbRef, id));
+
+    const bidValue = bid.val();
+
+    if (bidValue.sellerId == req.user.id) {
+      throw { name: "forbidden" };
+    }
+
+    if (bidValue.buyerId == req.user.id) {
+      throw { name: "already_bidded" };
+    }
+
+    if (bidValue.currentPrice >= currentPrice) {
+      throw { name: "bid_less_than_currentPrice" };
+    }
+
+    await update(child(dbRef, id), { currentPrice: parseInt(currentPrice), buyerId: req.user.id });
+
+    res.status(200).json({ message: "Bid success!" });
   } catch (error) {
     next(error);
   }
