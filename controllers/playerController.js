@@ -3,14 +3,6 @@ const { Player, Team } = require('../models')
 const PlayerM = require('../models/playerMongoDB')
 
 class Controller{
-    // static async showAllPlayers(req, res, next) {
-    //     try {
-    //         const players = await Player.findAll()
-    //         res.status(200).json(players)
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
 
     static async findPlayer(req, res, next) {
         try {
@@ -47,7 +39,7 @@ class Controller{
             const { name, rating, position, number, photo } = playerDB
             const newPlayer = await Player.create({ TeamId, name, rating, position, number, photo, price })
             await Team.decrement({ money: price }, { where: { id: TeamId } })
-            res.status(201).json({ message: `Success buy ${newPlayer.name} for ${team.name}` })
+            res.status(201).json({ message: `Successful recruiting ${newPlayer.name} for ${team.name}` })
         } catch (error) {
             next(error)
         }
@@ -77,7 +69,7 @@ class Controller{
             const price = calculatePrice(rating)
             await Player.create({ TeamId, name, rating, position, number, photo, price })
             Team.decrement({ money: gatchaFee }, { where: { id: TeamId } })
-            res.status(201).json({ message: `Success recruit ${name} for ${team.name}` })
+            res.status(201).json({ message: `Yeay, you success to recruiting ${name} for ${team.name} with $2000` })
         } catch (error) {
             next(error)
         }
@@ -86,10 +78,10 @@ class Controller{
     static async showAllPlayers(req, res, next) {
         try {
             const { page } = req.query || 0
-            const playersPerPage = 9
+            const playersPerPage = 12
             const players = await PlayerM.find()
                 .skip(page* playersPerPage)
-                .limit(9)
+                .limit(12)
             res.status(200).json(players)
         } catch (error) {
             next(error)
@@ -98,11 +90,7 @@ class Controller{
     static async showMyPlayers(req, res, next) {
         try {
             const { TeamId } = req.user
-            const myPlayer = await MyPlayer.findAll({
-                include: {
-                    model: Player,
-                    as: 'Player'
-                },
+            const myPlayer = await Player.findAll({
                 where: { TeamId }
             })
             res.status(200).json(myPlayer)
@@ -111,8 +99,40 @@ class Controller{
         }
     }
 
+    static async findMyPlayer(req, res, next) {
+        try {
+            const {id} = req.params
+            const playerFound = await Player.findOne({
+                where: { id }
+            })
+            if (!playerFound) {
+                throw { name: 'invalid_credentials'}
+            }
+            res.status(200).json(playerFound)
+        } catch (error) {
+            next(error)
+        }
+    }
 
-    
+    static async sellPlayer(req, res, next) {
+        try {
+            const { id } = req.params
+            const {TeamId} = req.user
+            const playerFound = await Player.findOne({
+                where: { id }
+            })
+            if (!playerFound) {
+                throw { name: 'invalid_credentials' }
+            }
+            Player.destroy({where:{id}})
+            let price = playerFound.price
+            Team.increment({ money: price }, { where: { id: TeamId } })
+            res.status(200).json({ message: `Successful selling ${playerFound.name} for $ ${price}` })
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    }
 }
 
 module.exports = Controller
