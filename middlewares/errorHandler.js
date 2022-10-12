@@ -2,6 +2,8 @@ const errorHandler = (err, req, res, next) => {
   let code = 500;
   let message = "Internal Server Error";
 
+  console.log(err)
+
   if (err.name == "AxiosError" && err.response.status) {
     code = 404;
     message = "Card not found";

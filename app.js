@@ -9,7 +9,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const app = express();
 const port = 3000;
 
-const { ref, get, push, child, update } = require("firebase/database");
+const { ref, get, push, child, update, query, orderByChild, equalTo } = require("firebase/database");
 const dbRef = ref(firebase, "/bids");
 
 const { User } = require("./models");
@@ -104,7 +104,7 @@ app.get("/bid/:id", async (req, res, next) => {
   }
 });
 
-app.post("/getCardDetails", async (req, res, next) => {
+app.post("/card/details", async (req, res, next) => {
   try {
     const { ids } = req.body;
 
@@ -128,7 +128,7 @@ app.post("/getCardDetails", async (req, res, next) => {
   }
 });
 
-app.get("/searchCard", async (req, res, next) => {
+app.get("/card/search", async (req, res, next) => {
   try {
     const { query, offset, num, type, race, attribute } = req.query;
 
@@ -181,7 +181,8 @@ app.get("/user", async (req, res, next) => {
   }
 });
 
-app.post("/bids", async (req, res, next) => {
+// bid / use dbRef
+app.post("/my-bid", async (req, res, next) => {
   try {
     const { cardId, expiredBy, startPrice, notes, condition } = req.body;
 
@@ -222,7 +223,8 @@ app.post("/bids", async (req, res, next) => {
   }
 });
 
-app.patch("/bid/:id", async (req, res, next) => {
+// bid / use dbRef
+app.patch("/my-bid/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     let { currentPrice } = req.body;
@@ -254,6 +256,86 @@ app.patch("/bid/:id", async (req, res, next) => {
     await update(child(dbRef, id), { currentPrice: parseInt(currentPrice), buyerId: req.user.id });
 
     res.status(200).json({ message: "Bid success!" });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// bid / use dbRef
+app.get("/my-bid/winning", async (req, res, next) => {
+  try {
+    let bids = await get(query(dbRef, orderByChild("buyerId"), equalTo(req.user.id)));
+    bids = bids.val();
+
+    let filteredBid = [];
+    let stringOfIDs = [];
+
+    for (const bid in bids) {
+      if (bids[bid].expiredBy < new Date().getTime()) {
+        filteredBid.push(bids[bid]);
+        stringOfIDs.push(bids[bid].cardId);
+      }
+    }
+
+    stringOfIDs = stringOfIDs.join(",");
+
+    const { data } = await axios({
+      url: "https://db.ygoprodeck.com/api/v7/cardinfo.php",
+      method: "GET",
+      params: {
+        id: stringOfIDs,
+      },
+    });
+
+    const payload = filteredBid.map((e) => {
+      const cardDetail = data.data.find((data) => data.id == e.cardId);
+
+      return {
+        ...e,
+        cardDetail,
+      };
+    });
+
+    res.status(200).json(payload);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// bid / use dbRef
+app.get("/my-bid/selling", async (req, res, next) => {
+  try {
+    let userBids = await get(query(dbRef, orderByChild("sellerId"), equalTo(req.user.id)));
+    userBids = userBids.val();
+
+    let bids = [];
+    let stringOfIDs = [];
+
+    for (const bid in userBids) {
+      bids.push(userBids[bid]);
+      stringOfIDs.push(userBids[bid].cardId);
+    }
+
+    stringOfIDs = stringOfIDs.join(",");
+
+    const { data } = await axios({
+      url: "https://db.ygoprodeck.com/api/v7/cardinfo.php",
+      method: "GET",
+      params: {
+        id: stringOfIDs,
+      },
+    });
+
+    const payload = bids.map((e) => {
+      const cardDetail = data.data.find((data) => data.id == e.cardId);
+
+      return {
+        ...e,
+        cardDetail,
+      };
+    });
+
+    res.status(200).json(payload);
   } catch (error) {
     next(error);
   }
