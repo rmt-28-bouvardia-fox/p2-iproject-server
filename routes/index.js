@@ -7,7 +7,7 @@ const routerInvitation = require('./routerInvitation');
 
 router.use(routerUser);
 router.get("/template", Controller.getTemplate)
-router.get("/:coupleName", Controller.readInvitation);
+router.get("/:coupleName/journey", Controller.readInvitation);
 
 router.use(authentication)
 router.use(routerInvitation)
