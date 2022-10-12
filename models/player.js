@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Player.belongsToMany(models.Team, {as: 'Team' , through: models.MyPlayer })
+      Player.belongsTo(models.Team)
     }
   }
   Player.init({
@@ -19,12 +19,18 @@ module.exports = (sequelize, DataTypes) => {
     rating: DataTypes.INTEGER,
     position: DataTypes.STRING,
     number: DataTypes.INTEGER,
-    team: DataTypes.STRING,
-    photo: DataTypes.STRING
-    // photo: DataTypes.STRING
+    price: DataTypes.INTEGER,
+    photo: DataTypes.STRING,
+    starter: DataTypes.BOOLEAN,
+    TeamId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Player',
+    hooks: {
+      beforeCreate(player) {
+        player.starter = false
+      }
+    }
   });
   return Player;
 };

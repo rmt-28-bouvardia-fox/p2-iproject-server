@@ -1,17 +1,100 @@
-const getPlayers = require('../helpers/getData')
-const { Player, MyPlayer } = require('../models')
+const calculatePrice = require('../helpers/playerPrice')
+const { Player, Team } = require('../models')
 const PlayerM = require('../models/playerMongoDB')
 
 class Controller{
-    static async showAllPlayers(req, res, next) {
+    // static async showAllPlayers(req, res, next) {
+    //     try {
+    //         const players = await Player.findAll()
+    //         res.status(200).json(players)
+    //     } catch (error) {
+    //         next(error)
+    //     }
+    // }
+
+    static async findPlayer(req, res, next) {
         try {
-            const players = await Player.findAll()
-            res.status(200).json(players)
+            const {id} = req.params
+            const player = await PlayerM.find({
+                _id: id
+            })
+            res.status(200).json(player)
+        } catch (error) {
+            res.status(500).json('Internal server error')
+        }
+    }
+
+    static async buyPlayer(req, res, next) {
+        try {
+            const PlayerId = req.params.id
+            const { TeamId } = req.user
+            const playerDB = await PlayerM.findOne({
+                _id: PlayerId
+            })
+
+            if (!playerDB) {
+                throw { name: 'no_credentials' }
+            }
+            const player = await Player.findOne({ where: { name: playerDB.name, TeamId } })
+            if (player) {
+                throw { name: 'bad_request', err: `Your team already have ${player.name}!` }
+            }
+            const price = calculatePrice(playerDB.rating)
+            const team = await Team.findOne({ where: { id: TeamId } })
+            if (team.money < price) {
+                throw { name: 'error_buy' }
+            }
+            const { name, rating, position, number, photo } = playerDB
+            const newPlayer = await Player.create({ TeamId, name, rating, position, number, photo, price })
+            await Team.decrement({ money: price }, { where: { id: TeamId } })
+            res.status(201).json({ message: `Success buy ${newPlayer.name} for ${team.name}` })
         } catch (error) {
             next(error)
         }
     }
 
+    static async getRandomPlayer(req, res, next) {
+        try {
+            const players = await PlayerM.find()
+            const { TeamId } = req.user
+            const totalPlayers = players.length
+            
+            let randomNumber = Math.ceil(Math.random() * totalPlayers)
+            let playerDB = await PlayerM.find()
+            let gatchaPlayer = playerDB[randomNumber]
+            const playerFound = await Player.findOne({ where: { name: gatchaPlayer.name, TeamId } })
+            while (playerFound) {
+                randomNumber = Math.ceil(Math.random() * totalPlayers)
+                let gatchaPlayer = playerDB[randomNumber]
+                playerFound = await Player.findOne({ where: { name: gatchaPlayer.name, TeamId } })
+            }
+            const { name, rating, position, number, photo } = gatchaPlayer
+            const gatchaFee = 2000
+            const team = await Team.findOne({ where: { id: TeamId } })
+            if (team.money < gatchaFee) {
+                throw { name: 'error_buy', err: `Your don't have enough money!` }
+            }
+            const price = calculatePrice(rating)
+            await Player.create({ TeamId, name, rating, position, number, photo, price })
+            Team.decrement({ money: gatchaFee }, { where: { id: TeamId } })
+            res.status(201).json({ message: `Success recruit ${name} for ${team.name}` })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async showAllPlayers(req, res, next) {
+        try {
+            const { page } = req.query || 0
+            const playersPerPage = 9
+            const players = await PlayerM.find()
+                .skip(page* playersPerPage)
+                .limit(9)
+            res.status(200).json(players)
+        } catch (error) {
+            next(error)
+        }
+    }
     static async showMyPlayers(req, res, next) {
         try {
             const { TeamId } = req.user
@@ -28,35 +111,14 @@ class Controller{
         }
     }
 
-    static async showMongoPlayers(req, res, next) {
-        try {
-            const players = await PlayerM.find()
-            res.status(200).json(players)
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
-    static async addPlayersToMongo(req, res, next) {
-        try {
-            const madridId = 541
-            const manUId = 33
-            const manCityId = 50
-            const psgId = 85
-            const teams = [madridId, manUId, manCityId, psgId]
-            const madridPlayers = await getPlayers(madridId)
-            const manUPlayers = await getPlayers(manUId)
-            const manCityPlayers = await getPlayers(manCityId)
-            const psgPlayers = await getPlayers(psgId)
-            await PlayerM.insertMany(madridPlayers)
-            await PlayerM.insertMany(manUPlayers)
-            await PlayerM.insertMany(manCityPlayers)
-            await PlayerM.insertMany(psgPlayers)
-            res.status(201).json({message: 'Berhasil menambahkan players'})
-        } catch (error) {
-            res.status(500).json('Internal Server Error')
-        }
-    }
+    
 }
 
 module.exports = Controller
+
+// {
+// _id: {
+//     $gt: "634652cfb002d4c74258987e"
+// }
+//             }

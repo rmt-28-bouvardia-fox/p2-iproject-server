@@ -35,8 +35,6 @@ async function getPlayers(TeamId) {
                 position: el.position,
                 photo: el.photo,
                 number: el.number,
-                createdAt: new Date(),
-                updatedAt: new Date()
             }
             players.push(player)
         }
