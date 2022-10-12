@@ -7,17 +7,17 @@ const ABSTRACT_API_KEY = process.env.ABSTRACT_API_KEY;
 const registerPatient = async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const { data } = await axios({
-      method: "get",
-      url: "https://emailvalidation.abstractapi.com/v1/",
-      params: {
-        api_key: ABSTRACT_API_KEY,
-        email,
-      },
-    });
-    if (data.deliverability !== "DELIVERABLE") {
-      throw { name: "invalid_email_address" };
-    }
+    // const { data } = await axios({
+    //   method: "get",
+    //   url: "https://emailvalidation.abstractapi.com/v1/",
+    //   params: {
+    //     api_key: ABSTRACT_API_KEY,
+    //     email,
+    //   },
+    // });
+    // if (data.deliverability !== "DELIVERABLE") {
+    //   throw { name: "invalid_email_address" };
+    // }
     const patient = await Patient.create({
       email,
       password,
@@ -54,6 +54,19 @@ const loginPatient = async (req, res, next) => {
     next(error);
   }
 };
+const getPatientDetail = async (req, res, next) => {
+  try {
+    const id = +req.user.id
+    const patient = await PatientDetail.findOne({where: {PatientId: id}})
+    if(!patient) {
+      throw {name: "data_not_found"}
+    }
+    res.status(200).json(patient)
+  } catch (error) {
+    next(error)
+  }
+}
+
 const createDetail = async (req, res, next) => {
   try {
     const id = +req.user.id;
@@ -103,4 +116,4 @@ const updateDetail = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { registerPatient, loginPatient, createDetail, updateDetail };
+module.exports = { registerPatient, loginPatient, getPatientDetail, createDetail, updateDetail };
