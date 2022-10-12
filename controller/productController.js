@@ -16,7 +16,7 @@ class ProductController {
       const id = +req.params.id;
       const product = await Product.findOne({
         where: { id },
-        include: ["OwnerProduct"],
+        include: ["OwnerProduct", "BidderProduct"],
       });
       if (product === null) {
         throw { name: "invalid" };
