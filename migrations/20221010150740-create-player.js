@@ -27,10 +27,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      starter: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN
-      },
       rating: {
         type: Sequelize.DECIMAL
       },
