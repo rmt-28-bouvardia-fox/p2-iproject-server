@@ -8,12 +8,14 @@ class Controller {
             const result = await Arisan.findAll({
                 where : {
                     people : {
-                        [Op.lt] : 10
+                        [Op.lte] : 10
                     }
                 }
             })
+            console.log(result)
             res.status(200).json(result)
         } catch (error) {
+            console.log(error)
             next(error)
         }
     }
@@ -40,6 +42,7 @@ class Controller {
                     UserId : req.user.id,
                     ArisanId : req.params.id
                 })
+                await Arisan.increment({people : 1}, {where : { id: req.params.id}})
                 res.status(201).json({id : add.id, User : add.UserId})
             }
         } catch (error) {
@@ -84,15 +87,16 @@ class Controller {
             const {name, expiredAt } = req.body
             const createArisan = await Arisan.create({
                 name,
-                expiredAt :moment( ms(expiredAt)).format('dddd, MMMM Do YYYY')
+                expiredAt : ms(expiredAt)
             })
+            res.status(201).json({message : `Created arisan with id : ${createArisan.id}`})
         } catch (error) {
             next(error)
         }
-    },
+    }
     static async payTrans (req, res, next) {
         try {
-            const update = await LogTran.update({status : "Success"},{
+            await LogTran.update({status : "Success"},{
                 where : {
                     UserId : req.user.id,
                     ArisanId : req.params.id
@@ -104,3 +108,5 @@ class Controller {
         }
     }
 }
+
+module.exports = Controller

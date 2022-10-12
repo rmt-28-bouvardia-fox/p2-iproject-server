@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-c    }
+      Arisan.belongsToMany(models.User , {through : models.MyArisan, foreignKey : "ArisanId"})
+      Arisan.belongsToMany(models.User , {through : models.LogTran, foreignKey : "ArisanId"})
+   }
   }
   Arisan.init({
     name: DataTypes.STRING,

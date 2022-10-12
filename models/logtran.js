@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+     LogTran.belongsTo(models.User, {foreignKey : "UserId"})
+     LogTran.belongsTo(models.Arisan, {foreignKey : "ArisanId"})
+
     }
   }
   LogTran.init({
