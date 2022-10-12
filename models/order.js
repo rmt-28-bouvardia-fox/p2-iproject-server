@@ -76,6 +76,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     price : DataTypes.INTEGER,
+    order_id : DataTypes.STRING,
     UserId: DataTypes.INTEGER
   }, {
     sequelize,
