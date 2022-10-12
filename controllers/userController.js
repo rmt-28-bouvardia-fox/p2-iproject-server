@@ -2,6 +2,9 @@ const { comparePassword } = require('../helpers/bcrypt')
 const { getToken } = require('../helpers/jwt')
 const {User} = require('../models')
 const validator = require('validator')
+const nodemailer = require('nodemailer')
+const sendOTP = require('../helpers/nodemailer')
+
 class UserController {
 
     static async register(req, res, next) {
@@ -44,7 +47,19 @@ class UserController {
 
             res.status(200).json({ access_token, name: user.name, email: user.email })
         } catch (error) {
-            console.log(error);
+            next(error)
+        }
+    }
+
+    static async verifyEmail(req, res, next) {
+        try {
+            const email = req.body.email
+            const otp = await sendOTP(email)
+            if (!otp) {
+                throw{name: 'error_login'}
+            }
+            res.status(200).json({ otp })
+        } catch (error) {
             next(error)
         }
     }
