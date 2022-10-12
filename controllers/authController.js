@@ -1,8 +1,9 @@
 const {User} = require('../models')
-
 const axios = require('axios')
 const { compare } = require('../helper/bcrypt')
 const { createToken } = require('../helper/jwt')
+const { OAuth2Client } = require('google-auth-library')
+const Client_Id = process.env.Client_Id 
 
 class Controller {
 
