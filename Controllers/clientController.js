@@ -44,7 +44,7 @@ class ClientController {
 
             const access_token = sign(payload)
 
-            res.status(200).json({access_token})
+            res.status(200).json({access_token, username : user.username})
         } catch (error) {
             next(error)
         }

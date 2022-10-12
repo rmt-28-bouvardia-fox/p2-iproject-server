@@ -11,9 +11,9 @@ router.get('/', (req,res) =>{
 })
 router.use('/comics', comic)
 router.use('/clients', client)
-router.use(authentication)
-router.use('/characters', character)
 
+router.use('/characters', character)
+router.use(authentication)
 router.use('/orders', order)
 
 module.exports = router
