@@ -8,6 +8,8 @@ const port = 3000;
 const router = require("./routes");
 const cors = require("cors");
 const errorHandler = require("./middlewares/errorHandler");
+const http = require("http");
+const server = http.createServer(app);
 
 app.use(cors());
 

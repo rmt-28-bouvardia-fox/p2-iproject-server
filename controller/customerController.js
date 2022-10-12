@@ -118,6 +118,16 @@ class Controller {
       next(error);
     }
   }
+
+  static async fethcOneWishlist(req, res, next) {
+    try {
+      let id = req.params.id;
+      const data = await Wishlist.findOne({ where: { id } });
+      res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = Controller;
