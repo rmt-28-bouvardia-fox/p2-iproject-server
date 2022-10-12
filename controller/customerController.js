@@ -69,7 +69,13 @@ class Controller {
         method: "get",
         url: `https://www.cheapshark.com/api/1.0/games?title=${title}`,
       });
-      res.status(200).json(data);
+      const result = [];
+      data.forEach((el) => {
+        if (el.steamAppID) {
+          result.push(el);
+        }
+      });
+      res.status(200).json(result);
     } catch (error) {
       next(error);
     }
@@ -92,6 +98,7 @@ class Controller {
       });
       res.status(200).json(findWishlist);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
