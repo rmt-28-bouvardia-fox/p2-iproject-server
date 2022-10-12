@@ -6,7 +6,7 @@ class OrderController {
 
     static async getOrders(req,res,next){
         try {
-            const userOrders = await User.findOne({where : {id : req.user.id}, include : Order})
+            const userOrders = await User.findOne({where : {id : req.user.id}, include : [{ model : Order}], order : [[Order, 'createdAt', 'desc']]})
             res.status(200).json(userOrders)
         } catch (error) {
             next(error)
