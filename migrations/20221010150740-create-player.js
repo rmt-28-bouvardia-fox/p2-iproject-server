@@ -8,17 +8,28 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      TeamId: {
+        references: {
+          model: 'Teams',
+          key: 'id'
+        },
+        type: Sequelize.INTEGER
+      },
       name: {
         allowNull: false,
         type: Sequelize.STRING
+      },
+      price: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       },
       number: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      team: {
+      starter: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.BOOLEAN
       },
       rating: {
         type: Sequelize.DECIMAL

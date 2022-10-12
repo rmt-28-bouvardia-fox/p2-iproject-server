@@ -8,9 +8,8 @@ const router = require('express').Router()
 router.post('/', TeamController.createTeam)
 router.use(generateTeam)
 router.get('/', TeamController.teamProfile)
-router.post('/randomBuy', TeamController.getRandomPlayer)
-router.get('/formattion', TeamController.formattion)
-router.post('/:playerId', TeamController.buyPlayer)
+// router.get('/formattion', TeamController.formattion)
+
 // router.use('/', )
 
 module.exports = router
