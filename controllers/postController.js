@@ -189,6 +189,22 @@ class PostController {
       next(error);
     }
   }
+
+  static async createMemeMulter(req, res, next) {
+    try {
+      const { title } = req.body;
+      const { path } = req.file;
+
+      const post = await Post.create({
+        title,
+        imageUrl: path,
+        UserId: req.user.id,
+      });
+      res.status(201).json(post);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = PostController;

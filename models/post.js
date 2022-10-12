@@ -37,9 +37,6 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: {
             msg: "Image is Required",
           },
-          isUrl: {
-            msg: "Image url format is required",
-          },
         },
       },
       UserId: DataTypes.INTEGER,
