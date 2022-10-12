@@ -18,7 +18,7 @@ class Controller {
             const { id } = req.params
             const teamFound = await Team.findOne({ where: { id: TeamId }, include: Player })
             if (teamFound.Players.length < 11) {
-                throw{name: 'bad_request', err: `You don't have enough players`}
+                throw{name: 'bad_request', err: `You must have minimum 11 players for a match`}
             }
             const team = await Team.findOne({
                 where: { id: TeamId },
@@ -44,7 +44,7 @@ class Controller {
             } else if (match.result == 'tie') {
                 message = `The result is draw!`
             }
-            res.status(200).json({message, score: match.score})
+            res.status(200).json({result: match.result, score: match.score})
         } catch (error) {
             console.log(error);
             next(error)

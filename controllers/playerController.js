@@ -34,7 +34,7 @@ class Controller{
             const price = calculatePrice(playerDB.rating)
             const team = await Team.findOne({ where: { id: TeamId } })
             if (team.money < price) {
-                throw { name: 'error_buy' }
+                throw { name: 'error_buy', err: `You don't have enough money!` }
             }
             const { name, rating, position, number, photo } = playerDB
             const newPlayer = await Player.create({ TeamId, name, rating, position, number, photo, price })
@@ -69,7 +69,7 @@ class Controller{
             const price = calculatePrice(rating)
             await Player.create({ TeamId, name, rating, position, number, photo, price })
             Team.decrement({ money: gatchaFee }, { where: { id: TeamId } })
-            res.status(201).json({ message: `Yeay, you success to recruiting ${name} for ${team.name} with $2000` })
+            res.status(201).json({ message: `Yeay, you got ${name}` })
         } catch (error) {
             next(error)
         }
@@ -150,7 +150,6 @@ class Controller{
             Team.increment({ money: price }, { where: { id: TeamId } })
             res.status(200).json({ message: `Successful selling ${playerFound.name} for $ ${price}` })
         } catch (error) {
-            console.log(error);
             next(error)
         }
     }
