@@ -73,17 +73,27 @@ class UserController {
 
   static async githubSignIn(req, res, next) {
     try {
-      const {githubToken} = req.body
+      const { githubToken } = req.body;
 
       if (!githubToken) {
         throw { name: "invalid_credential" };
       }
 
+      const dataGithub = await axios({
+        method: "get",
+        url: "https://api.github.com/user",
+        headers: {
+          Authorization: `Bearer ${githubToken}`,
+        },
+      });
+
+      const userUsername = dataGithub.data.login;
+
       const [user, created] = await User.findOrCreate({
-        where: { username: githubToken },
+        where: { username: userUsername },
         defaults: {
-          username: githubToken,
-          email: `${githubToken}@mail.com`,
+          username: userUsername,
+          email: `${userUsername}@github.com`,
           password: "github",
         },
         hooks: false,
