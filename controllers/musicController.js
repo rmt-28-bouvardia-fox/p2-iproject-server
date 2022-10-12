@@ -13,7 +13,9 @@ class Controller{
                     apikey:process.env.apikey
                 }
             })
-            res.status(200).json(data)
+            const track = data.tracks
+            const music = where(track,{ isStreamable : true })
+            res.status(200).json(music)
         } catch (err) {
             next(err)
         }
