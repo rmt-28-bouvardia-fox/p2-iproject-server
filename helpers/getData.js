@@ -1,8 +1,8 @@
 'use strict';
 const axios = require('axios');
 const apiSportUrl = 'https://v3.football.api-sports.io'
-let xRapidApiHost = `v3.football.api-sports.io`
-let xRapidApiKey = `f994994322f91099d8b50c0659c88b12`
+let xRapidApiHost = process.env.X_RAPID_API_HOST
+let xRapidApiKey = process.env.X_RAPID_API_KEY
 
 async function getPlayers(TeamId) {
     let players = []

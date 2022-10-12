@@ -34,41 +34,6 @@ class TeamController {
         }
     }
     
-   
-
-    static async formattion(req, res, next) {
-        try {
-            // const UserId
-        } catch (error) {
-            next(error)
-        }
-    }
-
-
-
-    // static async profile(req, res, next) {
-    //     try {
-    //         const UserId = req.user.id
-    //         const option = {}
-    //         option.where = { UserId }
-    //         const team = await Team.findOne(option)
-    //         if (!team) {
-    //             throw { name: 'invalid_credentials' }
-    //         }
-    //         const avgRating = await Team.findOne({
-    //             where: { id: team.id },
-    //             attributes: [[sequelize.fn('AVG', sequelize.col('Players.rating')), 'value']],
-    //             include: {
-    //                 model: Player, attributes: []
-    //             },
-    //             group: ['Team.id']
-    //         })
-    //         const overallRating = avgRating.dataValues.value
-    //         res.status(200).json({ team, overallRating })
-    //     } catch (error) {
-    //         next(error)
-    //     }
-    // }
 }
 
 module.exports = TeamController

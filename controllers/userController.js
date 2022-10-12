@@ -10,6 +10,10 @@ class UserController {
     static async register(req, res, next) {
         try {
             const { name, email, password } = req.body
+            const validEmail = validator.isEmail(email)
+            if (!validEmail) {
+                throw { name: 'invalid_email', message: 'invalid_email'}
+            }
             if (!email) {
                 throw { name: 'no_credentials', err: 'Email is required' }
             }

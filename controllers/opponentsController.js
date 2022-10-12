@@ -44,9 +44,8 @@ class Controller {
             } else if (match.result == 'tie') {
                 message = `The result is draw!`
             }
-            res.status(200).json({result: match.result, score: match.score})
+            res.status(200).json({message, score: match.score})
         } catch (error) {
-            console.log(error);
             next(error)
         }
     }

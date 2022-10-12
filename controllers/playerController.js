@@ -93,14 +93,17 @@ class Controller{
             if (req.query.search) {
                 search = req.query.search
             }
+            let playersPerPage = null
+            if (req.query.page) {
+                playersPerPage = 12
+            }
             const re = new RegExp(search)
             const { page } = req.query || 0
-            const playersPerPage = 12
             const players = await PlayerM.find({
                 name: re
             })
                 .skip(page * playersPerPage)
-                .limit(12)
+                .limit(playersPerPage)
                 .sort({name: 1})
             
             res.status(200).json(players)

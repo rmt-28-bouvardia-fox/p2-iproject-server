@@ -2,7 +2,7 @@
 const errorHandlers = async (err, req, res, next) => {
     let code = 500
     let message = "Internal Server Error"
-    if (err.name == 'SequelizeValidationError' || err.name == 'SequelizeUniqueConstraintError') {
+    if (err.name == 'SequelizeValidationError' || err.name == 'SequelizeUniqueConstraintError' || err.name == 'invalid_email') {
         code = 400
         message = err.errors.map((el) => {
             return el.message;
@@ -19,6 +19,9 @@ const errorHandlers = async (err, req, res, next) => {
     } else if (err.name == "forbidden") {
         code = 403
         message = "forbidden"
+    } else if (err.name == 'no_credentials') {
+        code = 400
+        message = err.err
     }
     res.status(code).json(message)
 }
