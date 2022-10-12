@@ -17,6 +17,7 @@ class Controller{
             let music = []
             for(let i = 0; i < track.length ;i++){
                 let data = {
+                    id: ++i,
                     name : track[i].name,
                     artist : track[i].artistName,
                     cover : "https://i.scdn.co/image/ab67616d0000b2737da6f8edfd0404b5c52de3eb",
