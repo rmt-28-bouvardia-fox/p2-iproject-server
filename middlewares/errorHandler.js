@@ -16,6 +16,9 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "invalid_email_address") {
     status = 400;
     message = `Please use valid email address`;
+  } else if (err.name === "duplicate_patient_details") {
+    status = 400;
+    message = `Please already have patient details`;
   } else if (err.name === "invalid_credentials") {
     status = 401;
     message = `Invalid email or password`;

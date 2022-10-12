@@ -72,6 +72,10 @@ const createDetail = async (req, res, next) => {
     const id = +req.user.id;
     const { name, birthDate, address, gender, bloodType, diseaseHistory } =
       req.body;
+    const duplicate = await PatientDetail.findOne({where: {PatientId: id}})
+    if(duplicate) {
+      throw {name: "duplicate_patient_details"}
+    }
     const patientDetail = await PatientDetail.create({
       name,
       birthDate,
