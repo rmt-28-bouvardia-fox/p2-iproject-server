@@ -9,7 +9,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const app = express();
 const port = 3000;
 
-const { ref, get, push, child, update, query, orderByChild, equalTo } = require("firebase/database");
+const { ref, get, push, child, update, query, remove, orderByChild, equalTo } = require("firebase/database");
 const dbRef = ref(firebase, "/bids");
 
 const { User } = require("./models");
@@ -91,12 +91,6 @@ app.get("/bid/:id", async (req, res, next) => {
       ...bid.val(),
       cardDetail,
     };
-
-    const { access_token } = req.headers;
-
-    if (access_token) {
-      User.findOne();
-    }
 
     res.status(200).json(detailBid);
   } catch (error) {
@@ -264,58 +258,33 @@ app.patch("/my-bid/:id", async (req, res, next) => {
 // bid / use dbRef
 app.get("/my-bid/winning", async (req, res, next) => {
   try {
-    let bids = await get(query(dbRef, orderByChild("buyerId"), equalTo(req.user.id)));
-    bids = bids.val();
-
-    let filteredBid = [];
-    let stringOfIDs = [];
-
-    for (const bid in bids) {
-      if (bids[bid].expiredBy < new Date().getTime()) {
-        filteredBid.push(bids[bid]);
-        stringOfIDs.push(bids[bid].cardId);
-      }
-    }
-
-    stringOfIDs = stringOfIDs.join(",");
-
-    const { data } = await axios({
-      url: "https://db.ygoprodeck.com/api/v7/cardinfo.php",
-      method: "GET",
-      params: {
-        id: stringOfIDs,
-      },
-    });
-
-    const payload = filteredBid.map((e) => {
-      const cardDetail = data.data.find((data) => data.id == e.cardId);
-
-      return {
-        ...e,
-        cardDetail,
-      };
-    });
-
-    res.status(200).json(payload);
-  } catch (error) {
-    next(error);
-  }
-});
-
-// bid / use dbRef
-app.get("/my-bid/selling", async (req, res, next) => {
-  try {
-    let userBids = await get(query(dbRef, orderByChild("sellerId"), equalTo(req.user.id)));
-    userBids = userBids.val();
+    let snapshot = await get(query(dbRef, orderByChild("buyerId"), equalTo(req.user.id)));
 
     let bids = [];
-    let stringOfIDs = [];
 
-    for (const bid in userBids) {
-      bids.push(userBids[bid]);
-      stringOfIDs.push(userBids[bid].cardId);
-    }
+    snapshot.forEach((item) => {
+      let data = item.val();
+      if (data.expiredBy < new Date().getTime()) {
+        let key = item.key;
+        let card = {
+          key: key,
+          buyerId: data.buyerId,
+          condition: data.condition,
+          sellerId: data.sellerId,
+          currentPrice: data.currentPrice,
+          startPrice: data.startPrice,
+          createdBy: data.createdBy,
+          createdAt: data.createdAt,
+          expiredBy: data.expiredBy,
+          cardId: data.cardId,
+          note: data.note,
+        };
 
+        bids.push(card);
+      }
+    });
+
+    let stringOfIDs = bids.map((e) => e.cardId);
     stringOfIDs = stringOfIDs.join(",");
 
     const { data } = await axios({
@@ -336,6 +305,123 @@ app.get("/my-bid/selling", async (req, res, next) => {
     });
 
     res.status(200).json(payload);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// bid / use dbRef
+app.get("/my-bid/selling", async (req, res, next) => {
+  try {
+    let snapshot = await get(query(dbRef, orderByChild("sellerId"), equalTo(req.user.id)));
+
+    let bids = [];
+
+    snapshot.forEach((item) => {
+      let key = item.key;
+      let data = item.val();
+      let card = {
+        key: key,
+        buyerId: data.buyerId,
+        condition: data.condition,
+        sellerId: data.sellerId,
+        currentPrice: data.currentPrice,
+        startPrice: data.startPrice,
+        createdBy: data.createdBy,
+        createdAt: data.createdAt,
+        expiredBy: data.expiredBy,
+        cardId: data.cardId,
+        note: data.note,
+      };
+
+      bids.push(card);
+    });
+
+    let stringOfIDs = bids.map((e) => e.cardId);
+    stringOfIDs = stringOfIDs.join(",");
+
+    const { data } = await axios({
+      url: "https://db.ygoprodeck.com/api/v7/cardinfo.php",
+      method: "GET",
+      params: {
+        id: stringOfIDs,
+      },
+    });
+
+    const payload = bids.map((e) => {
+      const cardDetail = data.data.find((data) => data.id == e.cardId);
+
+      return {
+        ...e,
+        cardDetail,
+      };
+    });
+
+    res.status(200).json(payload);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post("/my-bid/payment", async (req, res, next) => {
+  try {
+    const { payload } = req.body;
+
+    let getCurrentTimestamp = () => {
+      return "" + Math.round(new Date().getTime() / 1000);
+    };
+
+    const { data } = await axios({
+      // Below is the API URL endpoint
+      url: "https://app.sandbox.midtrans.com/snap/v1/transactions",
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Basic " + Buffer.from("SB-Mid-server-4rr4Bjd0BS96pkTbn_9YXtrP").toString("base64"),
+        // Above is API server key for the Midtrans account, encoded to base64
+      },
+      data:
+        // Below is the HTTP request body in JSON
+        {
+          transaction_details: {
+            order_id: "ORDER_" + getCurrentTimestamp() + "_" + payload.key,
+            gross_amount: parseInt(payload.currentPrice),
+          },
+          item_details: [
+            {
+              price: parseInt(payload.currentPrice),
+              quantity: 1,
+              name: payload.cardDetail.name,
+              merchant_name: payload.createdBy,
+            },
+          ],
+          credit_card: {
+            secure: true,
+          },
+          customer_details: {
+            first_name: req.user.username,
+            email: req.user.email,
+            phone: req.user.phoneNumber,
+          },
+        },
+    });
+
+    data.id = payload.key;
+
+    res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post("/my-bid/payment-callback", async (req, res, next) => {
+  try {
+    const { id } = req.body;
+
+    await remove(child(dbRef, id));
+
+    res.status(200).json({ message: "Success delete bid" });
   } catch (error) {
     next(error);
   }
