@@ -15,10 +15,14 @@ const errorHandler = (error, req, res, next) => {
         code = 404
         message = "Arisan does not exist, Arisan Not found"
        }
-    } else if(error.name == 'Location needed') {
-        code = 401
+    } else if(error.name === 'Location Needed') {
+        code = 400
+        message = error.name
+    } else if( error.name === "The bill has been paid") {
+        code = 400
         message = error.name
     }
+    console.log(error.name)
     res.status(code).json({ErrMessage : message})
 }
 module.exports = errorHandler
