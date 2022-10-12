@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const controllerAppointment = require("../controllers/controllerAppointment");
+const controllerMidtrans = require("../controllers/controllerMidtrans");
 const patientAuthorization = require("../middlewares/patientAuthorization");
 const doctorAuthorization = require("../middlewares/doctorAuthorization");
 
@@ -29,6 +30,16 @@ router.get(
   "/doctors",
   doctorAuthorization,
   controllerAppointment.getAllDoctorAppointment
+);
+router.get(
+  "/transactions",
+  patientAuthorization,
+  controllerMidtrans.midtransHandler
+);
+router.patch(
+  "/:appointmentId",
+  patientAuthorization,
+  controllerAppointment.updateStatus
 );
 router.post(
   "/consultationReports/:appointmentId",
