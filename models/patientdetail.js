@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   PatientDetail.beforeCreate((patientDetail) => {
-    if (patientDetail.diseaseHistory == "") {
+    if (patientDetail.diseaseHistory == "" || !patientDetail.diseaseHistory) {
       patientDetail.diseaseHistory =
         "This patient hasn't submitted disease history.";
     }
