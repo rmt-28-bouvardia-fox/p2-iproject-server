@@ -8,7 +8,7 @@ class Controller {
             const result = await Arisan.findAll({
                 where : {
                     people : {
-                        [Op.lte] : 10
+                        [Op.lt] : 10
                     }
                 }
             })
@@ -43,6 +43,15 @@ class Controller {
                     ArisanId : req.params.id
                 })
                 await Arisan.increment({people : 1}, {where : { id: req.params.id}})
+                await LogTran.create({
+                    ArisanId : req.params.id,
+                    UserId : req.user.id
+                })
+                await User.update({longtitude, latitude},{
+                    where : {
+                        id : req.user.id
+                    }
+                })
                 res.status(201).json({id : add.id, User : add.UserId})
             }
         } catch (error) {
@@ -62,32 +71,12 @@ class Controller {
             next(error)
         }
     }
-    static async addTransaction(req, res, next) {
-        try {
-            const { longtitude, latitude } = req.body
-            const create = await LogTran.create({
-                UserId : req.user.id,
-                ArisanId : req.params.arisanId
-            })
-            await User.update({longtitude, latitude},{
-                where : {
-                    id : req.user.id
-                }
-            })
-            res.status(201).json({
-                id : create.UserId,
-                Message : `created Log Transaction with Arisan Id : ${req.params.arisanId}`
-            })
-        } catch (error) {
-            next(error)
-        }
-    };
     static async addArisan(req, res, next) {
         try {
             const {name, expiredAt } = req.body
             const createArisan = await Arisan.create({
                 name,
-                expiredAt : ms(expiredAt)
+                expiredAt : `${ms(expiredAt)*10}`
             })
             res.status(201).json({message : `Created arisan with id : ${createArisan.id}`})
         } catch (error) {
@@ -100,6 +89,12 @@ class Controller {
                 where : {
                     UserId : req.user.id,
                     ArisanId : req.params.id
+                }
+            })
+            const {longtitude, latitude} = req.body
+            await User.update({longtitude, latitude},{
+                where : {
+                    id : req.user.id
                 }
             })
             res.status(200).json({message : "Updated status transaction into Success"})
