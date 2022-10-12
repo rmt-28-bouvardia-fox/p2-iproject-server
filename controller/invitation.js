@@ -1,4 +1,5 @@
 const { Invitation, Template } = require("./../models");
+const apiKey = process.env.GOOGLE_API_KEY
 
 class Controller {
   static async createInvitation(req, res, next) {
@@ -26,6 +27,7 @@ class Controller {
         weddingLocation,
         TemplateId,
         coupleName: `${groomName}&${BrideName}`,
+        maps:`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${weddingLocation.split(' ').join('+')}`
       });
       res.status(201).json(result);
     } catch (error) {
