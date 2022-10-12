@@ -4,6 +4,7 @@ const { compareHash } = require("../helpers/bcryptjs");
 const { generateToken } = require("../helpers/jwt");
 const { User } = require("../models");
 const { verifyToken } = require("../helpers/jwt");
+const axios = require("axios");
 
 class UserController {
   static async register(req, res, next) {
@@ -65,6 +66,32 @@ class UserController {
       const username = user.username;
       const id = user.id;
       res.status(200).json({ access_token, username, id });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async githubSignIn(req, res, next) {
+    try {
+      const {githubToken} = req.body
+
+      if (!githubToken) {
+        throw { name: "invalid_credential" };
+      }
+
+      const [user, created] = await User.findOrCreate({
+        where: { username: githubToken },
+        defaults: {
+          username: githubToken,
+          email: `${githubToken}@mail.com`,
+          password: "github",
+        },
+        hooks: false,
+      });
+
+      const access_token = generateToken({ id: user.id });
+
+      res.status(200).json({ access_token });
     } catch (error) {
       next(error);
     }
