@@ -77,7 +77,7 @@ const getDiagnosis = async (req, res, next) => {
       where: { id: appointmentId },
     });
     const patientId = appointment.PatientId;
-    const symptoms = `[${appointment.symptom}]`
+    const symptoms = `[${appointment.symptom}]`;
     const patient = await Patient.findOne({
       where: { id: patientId },
       include: PatientDetail,
@@ -118,11 +118,9 @@ const createConsultReport = async (req, res, next) => {
       { status: "Complete" },
       { where: { id: AppointmentId } }
     );
-    res
-      .status(201)
-      .json({
-        message: "Consultation report created, appointment status updated",
-      });
+    res.status(201).json({
+      message: "Consultation report created, appointment status updated",
+    });
   } catch (error) {
     next(error);
   }
@@ -175,6 +173,25 @@ const getAllDoctorAppointment = async (req, res, next) => {
     next(error);
   }
 };
+const updateStatus = async (req, res, next) => {
+  try {
+    const appointmentId = +req.params.appointmentId;
+    const appointment = await Appointment.findOne({
+      where: { id: appointmentId },
+    });
+    if (!appointment) {
+      throw { name: "data_not_found" };
+    }
+    await Appointment.update(
+      { status: "Archived" },
+      { where: { id: appointmentId } }
+    );
+    res.status(200).json({ message: "Status appointment have been updated" });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 module.exports = {
   createAppointment,
   getAllSymptom,
@@ -183,4 +200,5 @@ module.exports = {
   createConsultReport,
   getAllPatientAppointment,
   getAllDoctorAppointment,
+  updateStatus,
 };
