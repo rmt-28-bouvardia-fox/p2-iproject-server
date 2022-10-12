@@ -2,12 +2,14 @@ const { User } = require("./../models");
 const { compare } = require("./../helpers/bcrypt");
 const { createToken } = require("./../helpers/jwt");
 const {OAuth2Client} = require('google-auth-library');
+const sendMail = require("../email");
 
 class Controller {
   static async register(req, res, next) {
     try {
       const { username, email, password } = req.body;
       const createUser = await User.create({ username, email, password });
+      sendMail(createUser)
       res
         .status(201)
         .json({ message: `id:${createUser.id}, email:${createUser.email}` });
