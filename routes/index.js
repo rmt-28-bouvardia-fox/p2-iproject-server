@@ -10,6 +10,7 @@ router.post("/login", UserController.login);
 router.get("/authentication", UserController.authentication);
 router.post("/githubSignIn", UserController.githubSignIn);
 router.get("/posts", PostController.showAllPosts);
+router.post("/simsimi", UserController.simsimi);
 
 router.use(authentication);
 
