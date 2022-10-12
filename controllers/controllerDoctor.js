@@ -3,7 +3,6 @@ const { compare } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 const { Op } = require("sequelize");
 
-
 const registerDoctor = async (req, res, next) => {
   const { email, password, name, specialist, SpecialistId } = req.body;
   try {
@@ -47,12 +46,32 @@ const loginDoctor = async (req, res, next) => {
   }
 };
 const getAllDoctor = async (req, res, next) => {
+  const { page } = req.query;
+  const paramQuerySQL = {
+    attributes: {
+      exclude: ["password", "createdAt", "updatedAt"],
+    },
+  };
+  let limit;
+  let offset;
+  if (page !== "" && typeof page !== "undefined") {
+    if (page.size !== "" && typeof page.size !== "undefined") {
+      limit = page.size;
+      paramQuerySQL.limit = limit;
+    }
+
+    if (page.number !== "" && typeof page.number !== "undefined") {
+      offset = page.number * limit - limit;
+      paramQuerySQL.offset = offset;
+    }
+  } else {
+    limit = 8; // default limit 8 item
+    offset = 0;
+    paramQuerySQL.limit = limit;
+    paramQuerySQL.offset = offset;
+  }
   try {
-    const doctors = await Doctor.findAll({
-      attributes: {
-        exclude: ["password", "createdAt", "updatedAt"],
-      },
-    });
+    const doctors = await Doctor.findAll(paramQuerySQL);
     res.status(200).json(doctors);
   } catch (error) {
     next(error);
