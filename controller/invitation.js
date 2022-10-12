@@ -12,6 +12,7 @@ class Controller {
         motherBride,
         weddingDate,
         weddingLocation,
+        TemplateId,
       } = req.body;
       const result = await Invitation.create({
         UserId: req.user.id,
@@ -23,6 +24,7 @@ class Controller {
         motherBride,
         weddingDate,
         weddingLocation,
+        TemplateId,
         coupleName: `${groomName}&${BrideName}`,
       });
       res.status(201).json(result);
@@ -104,26 +106,7 @@ class Controller {
       next(error);
     }
   }
-  static async chooseTemplate(req, res, next) {
-    try {
-      const { coupleName } = req.params;
-      const findInvitation = await Invitation.findOne({
-        where: { coupleName },
-      });
-      if (!findInvitation) {
-        throw { name: "Data not found" };
-      }
 
-      const TemplateId = req.body;
-      const update = await Invitation.update(TemplateId, {
-        where: { coupleName },
-      });
-
-      res.status(200).json("Success");
-    } catch (error) {
-      next(error);
-    }
-  }
   static async getTemplate(req, res, next) {
     try {
       const template = await Template.findAll()
