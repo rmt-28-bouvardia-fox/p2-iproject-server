@@ -20,7 +20,7 @@ class Controller {
                     email:email
                 }
             })
-            if(!valid) throw {name:`invalid_credentials`}
+            if(!valid) throw {name:`invalid_email`}
 
             if(valid.data.is_smtp_valid.value == true){
                 const nodemailer = require('nodemailer')

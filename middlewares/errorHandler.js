@@ -27,6 +27,10 @@ console.log(err)
         status = 403
         message = `forbidden`
     }
+    else if(err.name == `invalid_email`){
+        status = 400
+        message = 'use real email'
+    }
     res.status(status).json(message)
 }
 
