@@ -37,6 +37,9 @@ class Controller {
       const { coupleName } = req.params;
       const findInvitation = await Invitation.findOne({
         where: { coupleName },
+        include:[
+          {model: Template}
+        ]
       });
       if (!findInvitation) {
         throw { name: "Data not found" };
@@ -44,6 +47,7 @@ class Controller {
         res.status(200).json(findInvitation);
       }
     } catch (error) {
+      console.log(error)
       next(error);
     }
   }
@@ -109,10 +113,10 @@ class Controller {
 
   static async getTemplate(req, res, next) {
     try {
-      const template = await Template.findAll()
+      const template = await Template.findAll();
       res.status(200).json(template);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       next(error);
     }
   }

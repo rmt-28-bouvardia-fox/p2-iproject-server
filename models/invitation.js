@@ -100,7 +100,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       TemplateId: {
-        type: DataTypes.TEXT,
+        type: DataTypes.INTEGER,
         allowNull:true
       },
     },
