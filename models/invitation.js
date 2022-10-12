@@ -103,6 +103,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull:true
       },
+      maps: {
+        type: DataTypes.TEXT,
+        allowNull:true
+      },
     },
     {
       sequelize,
