@@ -1,4 +1,10 @@
-const { Patient, PatientDetail, Appointment, ConsultationReport } = require("../models");
+const {
+  Doctor,
+  Patient,
+  PatientDetail,
+  Appointment,
+  ConsultationReport,
+} = require("../models");
 const axios = require("axios");
 const API_MEDIC_KEY = process.env.API_MEDIC_KEY;
 
@@ -38,12 +44,15 @@ const getAllSymptom = async (req, res, next) => {
 const getAllSpecialist = async (req, res, next) => {
   try {
     const email = req.user.email;
-    const patient = await Patient.findOne({ where: { email }, include: PatientDetail });
+    const patient = await Patient.findOne({
+      where: { email },
+      include: PatientDetail,
+    });
     if (!patient) {
       throw { name: "data_not_found" };
     }
-    const gender = patient.PatientDetail.gender.toLowerCase()
-    const year_of_birth = patient.PatientDetail.birthDate.getFullYear()
+    const gender = patient.PatientDetail.gender.toLowerCase();
+    const year_of_birth = patient.PatientDetail.birthDate.getFullYear();
     const { symptoms } = req.query;
     const { data } = await axios({
       method: "get",
@@ -104,19 +113,21 @@ const getAllPatientAppointment = async (req, res, next) => {
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
-      include: {
+      include: [{
         model: ConsultationReport,
         attributes: {
           exclude: ["createdAt", "updatedAt"],
         },
-      },
+      }, {
+        model: Doctor,
+        attributes: ["name"]
+      }],
     });
     res.status(200).json(appointments);
   } catch (error) {
     next(error);
   }
 };
-
 const getAllDoctorAppointment = async (req, res, next) => {
   try {
     const id = +req.user.id;
@@ -125,6 +136,14 @@ const getAllDoctorAppointment = async (req, res, next) => {
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
+      include: {
+        model: Patient,
+        attributes: ['id'],
+        include: {
+          model: PatientDetail,
+          attributes: ['name']
+        }
+      }
     });
     res.status(200).json(appointments);
   } catch (error) {
