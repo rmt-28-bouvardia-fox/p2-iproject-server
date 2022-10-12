@@ -9,7 +9,7 @@ class WeatherController {
         url: "http://dataservice.accuweather.com/locations/v1/cities/search",
         method: "get",
         params: {
-          apikey: "y1JoHfBjsj5NnLAwxcu3OxaAhdbWRTtW",
+          apikey: "Ac7bmZBHnAMUOpYsWUWGmpCSdVjmQAGn",
           q: city,
         },
       });
@@ -20,7 +20,27 @@ class WeatherController {
         url: `http://dataservice.accuweather.com/currentconditions/v1/${key}`,
         method: "get",
         params: {
-          apikey: "y1JoHfBjsj5NnLAwxcu3OxaAhdbWRTtW",
+          apikey: "Ac7bmZBHnAMUOpYsWUWGmpCSdVjmQAGn",
+        },
+      });
+
+      const weatherData = { city: result.data[0], cityCondition: data };
+
+      res.status(200).json(weatherData);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async geoLocation(req, res, next) {
+    try {
+      const { location } = req.query;
+      const { data } = await axios({
+        url: "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search",
+        method: "get",
+        params: {
+          apikey: "Ac7bmZBHnAMUOpYsWUWGmpCSdVjmQAGn",
+          q: location,
         },
       });
 

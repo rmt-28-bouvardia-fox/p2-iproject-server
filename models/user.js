@@ -46,6 +46,9 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      status: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
@@ -55,6 +58,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.beforeCreate((user) => {
     user.password = hashPassword(user.password);
+    user.status = "not subscriber";
   });
   return User;
 };
