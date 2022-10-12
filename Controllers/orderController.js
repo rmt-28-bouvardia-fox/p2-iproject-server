@@ -1,11 +1,42 @@
-const {Order} = require('../models')
+const {Order, User} = require('../models')
 const midtransClient = require('midtrans-client')
 const serverKey = process.env.SERVER_KEY
 
 class OrderController {
 
-    static async addToCart(){
-        
+    static async getOrders(req,res,next){
+        try {
+            const userOrders = await User.findOne({where : {id : req.user.id}, include : Order})
+            res.status(200).json(userOrders)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async getCart(req,res,next){
+        try {
+            const UserId = req.user.id
+
+            const cart = await Order.findAll({where : {UserId, status : 'unpaid'}})
+            res.status(200).json(cart)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async addToCart(req,res,next){
+        try {
+            const {comicId, comicName, comicImageUrl, price} = req.body
+            const orderNumber = new Date().getTime() + '_' + req.user.username
+            const UserId = req.user.id
+            const status = 'unpaid'
+
+            const added = await Order.create({orderNumber, status,comicId, comicName, comicImageUrl, UserId, price : price * 15500})
+
+            res.status(201).json({added})
+        } catch (error) {
+            next(error)
+        }
     }
 
     static async order(){
