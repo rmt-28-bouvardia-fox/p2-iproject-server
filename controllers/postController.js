@@ -159,18 +159,6 @@ class PostController {
     }
   }
 
-  static async showUserPost(req, res, next) {
-    try {
-      const posts = await Post.findAll({
-        include: Like,
-        where: { UserId: req.user.id },
-      });
-      res.status(200).json(posts);
-    } catch (error) {
-      next(error);
-    }
-  }
-
   static async deletePost(req, res, next) {
     const { id } = req.params;
     try {
