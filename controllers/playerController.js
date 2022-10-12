@@ -27,7 +27,7 @@ class Controller{
             if (!playerDB) {
                 throw { name: 'no_credentials' }
             }
-            const player = await Player.findOne({ where: { name: playerDB.name, TeamId } })
+            const player = await Player.findOne({ where: { name: playerDB.name, TeamId, TeamId } })
             if (player) {
                 throw { name: 'bad_request', err: `Your team already have ${player.name}!` }
             }
@@ -77,11 +77,32 @@ class Controller{
 
     static async showAllPlayers(req, res, next) {
         try {
+            if (req.query.search) {
+                search = req.query.search
+            }
+            const players = await PlayerM.find()
+            
+            res.status(200).json(players)
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async showStorePlayers(req, res, next) {
+        try {
+            let search = ''
+            if (req.query.search) {
+                search = req.query.search
+            }
+            const re = new RegExp(search)
             const { page } = req.query || 0
             const playersPerPage = 12
-            const players = await PlayerM.find()
-                .skip(page* playersPerPage)
+            const players = await PlayerM.find({
+                name: re
+            })
+                .skip(page * playersPerPage)
                 .limit(12)
+                .sort({name: 1})
+            
             res.status(200).json(players)
         } catch (error) {
             next(error)
