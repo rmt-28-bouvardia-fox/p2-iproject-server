@@ -1,15 +1,24 @@
 const errorHandler = (error, req, res, next) => {
-    console.log(error)
-    const code = 500
-    const message = "Internal Server Error"
+    let code = 500
+    let message = "Internal Server Error"
     if(error.name == 'Arisan Already exists') {
         code = 400
         message = error.name
     } else if (error.name == 'Invalid token'){
         code = 401
         message = error.name
+    } else if (error.name == "Insert the correct value /1 Year or /1 Month"){
+        code = 401
+        message = error.name
+    } else if(error.name == "SequelizeForeignKeyConstraintError") {
+       if(error.parent.detail == `Key (ArisanId)=(${error.id}) is not present in table "Arisans".`){
+        code = 404
+        message = "Arisan does not exist, Arisan Not found"
+       }
+    } else if(error.name == 'Location needed') {
+        code = 401
+        message = error.name
     }
-
-    res.status(code).json(message)
+    res.status(code).json({ErrMessage : message})
 }
 module.exports = errorHandler

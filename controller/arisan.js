@@ -34,18 +34,22 @@ class Controller {
     }
     static async addMyArisan(req, res, next) {
         try {
+            const {longtitude, latitude} = req.body
+            if(!longtitude || !latitude) {
+                throw { name : "Location Needed"}
+            }
             const find = await MyArisan.findOne({where : {ArisanId : req.params.id, UserId : req.user.id}})
             if(find){
                 throw { name : "Arisan Already exists"}
             } else {
                 const add = await MyArisan.create({
-                    UserId : req.user.id,
-                    ArisanId : req.params.id
+                    UserId : +req.user.id,
+                    ArisanId : +req.params.id
                 })
                 await Arisan.increment({people : 1}, {where : { id: req.params.id}})
                 await LogTran.create({
-                    ArisanId : req.params.id,
-                    UserId : req.user.id
+                    ArisanId : +req.params.id,
+                    UserId : +req.user.id
                 })
                 await User.update({longtitude, latitude},{
                     where : {
@@ -55,6 +59,7 @@ class Controller {
                 res.status(201).json({id : add.id, User : add.UserId})
             }
         } catch (error) {
+            error.id = req.params.id
             next(error)
         }
     }
@@ -97,8 +102,7 @@ class Controller {
         try {
             await LogTran.update({status : "Success"},{
                 where : {
-                    UserId : req.user.id,
-                    ArisanId : req.params.id
+                    id: req.params.id,
                 }
             })
             const {longtitude, latitude} = req.body
