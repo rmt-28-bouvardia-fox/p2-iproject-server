@@ -1,8 +1,9 @@
 const {User} = require('../models')
-
 const axios = require('axios')
 const { compare } = require('../helper/bcrypt')
 const { createToken } = require('../helper/jwt')
+const { OAuth2Client } = require('google-auth-library')
+const Client_Id = process.env.Client_Id 
 
 class Controller {
 
@@ -107,17 +108,37 @@ class Controller {
 
     static async google(req,res,next){
         try {
-            
-        } catch (err) {
-            
-        }
-    }
+            const { google_token } = req.headers
+            const client = new OAuth2Client(Client_Id)
+            const ticket = await client.verifyIdToken({
+                idToken:google_token,
+                audience:Client_Id
+            })
+            const payload = ticket.getPayload()
+            const {given_name, family_name,email} = payload
+            const [user,created] = await User.findOrCreate({
+                where: { email },
+                default:{
+                    username: family_name? given_name + ' ' + family_name : given_name,
+                    email,
+                    password:'Google'
+                },
+                hooks:false
+            })
+            const access_token = createToken({
+                id:user.id || created.id,
+                username:user.username || created.username,
+                email:user.email || created.email
+            })
 
-    static async facebook(req,res,next){
-        try {
-            
+            res.status(200).json({
+                access_token,
+                id:user.id || created.id,
+                username:user.username || created.username,
+                status:user.status || created.status
+            })
         } catch (err) {
-            
+            next(err)
         }
     }
 
