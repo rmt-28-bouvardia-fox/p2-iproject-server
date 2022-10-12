@@ -74,11 +74,21 @@ class Controller {
     static async addArisan(req, res, next) {
         try {
             const {name, expiredAt } = req.body
-            const createArisan = await Arisan.create({
-                name,
-                expiredAt : `${ms(expiredAt)*10}`
-            })
-            res.status(201).json({message : `Created arisan with id : ${createArisan.id}`})
+            if(expiredAt === '1y'){
+                const createArisan = await Arisan.create({
+                    name,
+                    expiredAt : new Date().getTime()+ms('10y')
+                })
+                res.status(201).json({message : `Created arisan with id : ${createArisan.id}`})    
+            } else if(expiredAt === '1m') {
+                const createArisan = await Arisan.create({
+                    name,
+                    expiredAt : new Date().getTime()+ms('300d')
+                })
+                res.status(201).json({message : `Created arisan with id : ${createArisan.id}`})
+            } else {
+                throw { name : "Insert the correct value /1 Year or /1 Month"}
+            }
         } catch (error) {
             next(error)
         }
