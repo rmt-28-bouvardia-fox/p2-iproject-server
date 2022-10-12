@@ -8,7 +8,7 @@ router.post("/login", Controller.customerLogin);
 
 router.use(authentication);
 
-router.get("/chat");
+router.get("/buygame/:price", Controller.buyGame);
 router.get("/games", Controller.gameCustomer);
 router.post("/wishlist", Controller.addWishlist);
 router.get("/wishlist", Controller.fetchWishlist);

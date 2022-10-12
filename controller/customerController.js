@@ -2,6 +2,8 @@ const { User, Wishlist } = require("../models");
 const { createToken } = require("../helpers/jwt");
 const { compare } = require("../helpers/bcrypt");
 const axios = require("axios");
+const nodemailer = require("nodemailer");
+const midtransClient = require("midtrans-client");
 
 class Controller {
   static async customerRegister(req, res, next) {
@@ -128,6 +130,92 @@ class Controller {
       next(error);
     }
   }
+
+  static async buyGame(req, res, next) {
+    try {
+      let price = req.params.price;
+      const { email, title } = req.body;
+      let snap = new midtransClient.Snap({
+        // Set to true if you want Production Environment (accept real transaction).
+        isProduction: false,
+        serverKey: "SB-Mid-server-4SbP9885175rZWTHMq1UcYPu",
+      });
+
+      let parameter = {
+        transaction_details: {
+          order_id: new Date(),
+          gross_amount: price,
+        },
+        credit_card: {
+          secure: true,
+        },
+        customer_details: {
+          first_name: "budi",
+          last_name: "pratama",
+          email: "budi.pra@example.com",
+          phone: "08111222333",
+        },
+      };
+
+      snap.createTransaction(parameter).then((transaction) => {
+        // transaction token
+        let transactionToken = transaction.token;
+        console.log("transactionToken:", transactionToken);
+        res.status(200).json({ transactionToken });
+      });
+
+      // NODEMAILER
+      // const transporter = nodemailer.createTransport({
+      //   service: "gmail",
+      //   auth: {
+      //     user: process.env.ID_GMAIL,
+      //     pass: process.env.PASS_GMAIL,
+      //   },
+      // });
+      // console.log(process.env.ID_GMAIL);
+      // console.log(process.env.PASS_GMAIL);
+      // const mailOptions = {
+      //   from: process.env.ID_GMAIL,
+      //   to: email,
+      //   subject: "mail from gift game",
+      //   text: `terima kasih sudah membeli gamenya ${title} seharga ${price}`,
+      // };
+      // transporter.sendMail(mailOptions, (err, info) => {
+      //   if (err) {
+      //     console.log(err, "masuk ke error");
+      //   }
+      //   console.log("Email sent: " + info.response);
+      // });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  // static async gitHubSignIn(req, res, next) {
+  //   try {
+  //     const { gitToken } = req.body;
+  //     if (!gitToken) {
+  //       throw { name: `invalid_credentials` };
+  //     }
+  //     const [user, created] = await User.findOrCreate({
+  //       where: { username: gitToken },
+  //       defaults: {
+  //         username: gitToken,
+  //         email: `${gitToken}@gmail.com`,
+  //         password: "gitHub",
+  //       },
+  //       hooks: false,
+  //     });
+  //     const payload = {
+  //       id: user.id,
+  //     };
+  //     const access_token = createToken(payload);
+  //     res.status(200).json({ access_token });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 }
 
 module.exports = Controller;
