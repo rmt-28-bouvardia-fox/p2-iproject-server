@@ -14,7 +14,18 @@ class Controller{
                 }
             })
             const track = data.tracks
-            const music = where(track,{ isStreamable : true })
+            let music = []
+            for(let i = 0; i < track.length ;i++){
+                let data = {
+                    name : track[i].name,
+                    artist : track[i].artistName,
+                    cover : "https://i.scdn.co/image/ab67616d0000b2737da6f8edfd0404b5c52de3eb",
+                    source : track[i].previewURL,
+                    favorited:false
+                }
+                music.push(data)
+                data = {}
+            }
             res.status(200).json(music)
         } catch (err) {
             next(err)
