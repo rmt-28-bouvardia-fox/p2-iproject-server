@@ -14,12 +14,10 @@ class ProductController {
   static async findOne(req, res, next) {
     try {
       const id = +req.params.id;
-      const product = await Product.findOne(
-        {
-          include: ["OwnerProduct"],
-        },
-        { where: { id } }
-      );
+      const product = await Product.findOne({
+        where: { id },
+        include: ["OwnerProduct"],
+      });
       if (product === null) {
         throw { name: "invalid" };
       } else {
@@ -73,7 +71,9 @@ class ProductController {
 
   static async getAllList(req, res, next) {
     try {
+      console.log(+req.user.id);
       const lists = await UserProduct.findAll({
+        where: { UserId: +req.user.id },
         include: [
           { model: Product, include: ["BidderProduct", "OwnerProduct"] },
         ],
