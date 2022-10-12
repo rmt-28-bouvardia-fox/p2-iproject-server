@@ -9,5 +9,6 @@ router.get("/memes", PostController.getAllMemes);
 router.post("/:id/like", PostController.likePost);
 router.delete("/:id", PostController.deletePost);
 router.put("/:id", PostController.editPost);
+router.get("/:id", PostController.showPost);
 
 module.exports = router;

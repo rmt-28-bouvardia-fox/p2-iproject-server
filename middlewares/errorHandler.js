@@ -1,4 +1,5 @@
 const errorHandler = (err, req, res, next) => {
+  console.log(err);
   let code = 500;
   let message = "Internal Server Error";
 
@@ -34,7 +35,7 @@ const errorHandler = (err, req, res, next) => {
     message = "You already liked this post";
   } else if (err.name === "the_end") {
     code = 404;
-    message = "Sorry, nothing further here";
+    message = "Sorry, nothing here";
   }
 
   res.status(code).json({ message });

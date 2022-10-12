@@ -77,9 +77,55 @@ class PostController {
         throw { name: "imgflip_error", message: memes.data.error_message };
       }
 
-      
+      const memesData = memes.data.data.memes;
 
-      res.status(201).json(memes.data.data.memes);
+      const { page } = req.query;
+      let currentPage = page;
+      if (!page) {
+        currentPage = 1;
+      }
+      const limit = 10;
+
+      function paginate(array, page_size, page_number) {
+        return array.slice(
+          (page_number - 1) * page_size,
+          page_number * page_size
+        );
+      }
+
+      const memesPagination = paginate(memesData, limit, currentPage);
+
+      if (memesPagination.length === 0) {
+        throw { name: "the_end" };
+      }
+
+      const totalItems = memesData.length;
+      const totalPages = Math.ceil(totalItems / limit);
+
+      const result = {
+        totalItems,
+        memes: memesPagination,
+        totalPages,
+        currentPage,
+      };
+
+      res.status(201).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async showPost(req, res, next) {
+    const { id } = req.params;
+    try {
+      const post = await Post.findByPk(id, {
+        include: [User, Like],
+      });
+      if (!post) {
+        throw { name: "post_not_found" };
+      } else {
+        res.status(200).json(post);
+      }
     } catch (error) {
       next(error);
     }
