@@ -1,5 +1,6 @@
 const { Product, User, UserProduct } = require("../models");
 const nodemailer = require("nodemailer");
+const midtransClient = require('midtrans-client');
 
 class ProductController {
   static async getAll(req, res, next) {
@@ -76,7 +77,7 @@ class ProductController {
         .status(200)
         .json({ message: "notification has been send to your email" });
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -96,6 +97,38 @@ class ProductController {
     } catch (error) {
       next(error);
     }
+  }
+
+  static async pay(req, res, next) {
+    const { gross_amount } = req.body
+    let snap = new midtransClient.Snap({
+      // Set to true if you want Production Environment (accept real transaction).
+      isProduction: false,
+      serverKey: "SB-Mid-server-r_Xh_HnIqTRH_2W-hnOn-_L4",
+    });
+
+    let parameter = {
+      transaction_details: {
+        order_id: new Date(),
+        gross_amount: gross_amount,
+      },
+      credit_card: {
+        secure: true,
+      },
+      customer_details: {
+        first_name: "budi",
+        last_name: "pratama",
+        email: "budi.pra@example.com",
+        phone: "08111222333",
+      },
+    };
+
+    snap.createTransaction(parameter).then((transaction) => {
+      // transaction token
+      let transactionToken = transaction.token;
+      console.log("transactionToken:", transactionToken);
+      res.status(200).json(transactionToken)
+    });
   }
 
   static async getAllList(req, res, next) {
