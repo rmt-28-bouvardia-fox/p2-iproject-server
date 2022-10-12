@@ -20,7 +20,7 @@ class CharacterController {
                 },
                 method : 'get'
             })
-            res.status(200).json(data)
+            res.status(200).json(data.data.results)
         } catch (error) {
             next(error)
         }
