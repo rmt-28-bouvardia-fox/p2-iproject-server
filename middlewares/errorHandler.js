@@ -21,8 +21,11 @@ const errorHandler = (error, req, res, next) => {
     } else if( error.name === "The bill has been paid") {
         code = 400
         message = error.name
+    } else if(error.name == "Log Transaction not found") {
+        code = 404
+        message = error.name
     }
-    console.log(error.name)
+    console.log(error)
     res.status(code).json({ErrMessage : message})
 }
 module.exports = errorHandler

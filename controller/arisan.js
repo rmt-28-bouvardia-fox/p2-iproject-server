@@ -1,8 +1,9 @@
 const ms = require("ms");
+const midtransClient = require("midtrans-client");
 const nodemailer = require("nodemailer");
 const { Op } = require("sequelize");
 const { Arisan, MyArisan, User, LogTran } = require("../models");
-
+// let arisanId
 class Controller {
   static async fetchArisan(req, res, next) {
     try {
@@ -15,8 +16,17 @@ class Controller {
       });
       res.status(200).json(result);
     } catch (error) {
-      console.log(error);
       next(error);
+    }
+  }
+  static async findOne(req, res, next) {
+    try {
+      const find = await LogTran.findAll({
+        where : {UserId : req.user.id, ArisanId : req.params.id }, include : [User, Arisan]
+      })
+      res.status(200).json(find)
+    } catch (error) {
+      next(error)
     }
   }
   static async fetchMyArisan(req, res, next) {
@@ -65,17 +75,17 @@ class Controller {
           host: "smtp.gmail.com",
           port: 587,
           auth: {
-            user: "nissinwaffer2000@gmail.com",
-            pass: "xejduwhcsuzvpzhc",
+            user: process.env.USER_EMAIL,
+            pass: process.env.USER_PASS,
           },
           tls: {
             rejectUnauthorized: false,
           },
         });
-
+        const email = await User.findByPk(req.user.id);
         const options = {
-          from: "nissinwaffer2000@gmail.com",
-          to: "tribagus0510@gmail.com",
+          from: process.env.USER_EMAIL,
+          to: email.email,
           subject: "Tagihan Arisan",
           text:
             "Tagihan hari ini adalah \n" +
@@ -93,7 +103,6 @@ class Controller {
         res.status(201).json({ id: add.id, User: add.UserId });
       }
     } catch (error) {
-      console.log(error);
       error.id = req.params.id;
       next(error);
     }
@@ -125,7 +134,7 @@ class Controller {
       } else if (expiredAt === "1m") {
         const createArisan = await Arisan.create({
           name,
-          expiredAt: new Date().getTime() + ms("300d"),
+          expiredAt: new Date().getTime()+ms("300d"),
         });
         res
           .status(201)
@@ -140,6 +149,9 @@ class Controller {
   static async payTrans(req, res, next) {
     try {
       const result = await LogTran.findByPk(req.params.id);
+      if (!result) {
+        throw { name: "Log Transaction not found" };
+      }
       if (result.status == "Success") {
         throw { name: "The bill has been paid" };
       }
@@ -164,17 +176,17 @@ class Controller {
         host: "smtp.gmail.com",
         port: 587,
         auth: {
-          user: "nissinwaffer2000@gmail.com",
-          pass: "xejduwhcsuzvpzhc",
+          user: process.env.USER_EMAIL,
+          pass: process.env.USER_PASS,
         },
         tls: {
           rejectUnauthorized: false,
         },
       });
-
+      const email = await User.findByPk(req.user.id);
       const options = {
-        from: "nissinwaffer2000@gmail.com",
-        to: "tribagus0510@gmail.com",
+        from: process.env.USER_EMAIL,
+        to: email.email,
         subject: "Tagihan Arisan",
         text:
           "Tagihan hari ini adalah \n" +
@@ -195,6 +207,35 @@ class Controller {
     } catch (error) {
       next(error);
     }
+  }
+  static async midtrans(req, res, next) {
+    let snap = new midtransClient.Snap({
+      // Set to true if you want Production Environment (accept real transaction).
+      isProduction: false,
+      serverKey: "SB-Mid-server-qjWt8PBvtX45mmB4ztQBs9bq",
+    });
+    // const findAmount = Arisan.findOne()
+    let parameter = {
+      transaction_details: {
+        order_id: `${Math.floor(Math.random()*100) + 1}`,
+        gross_amount: 10000,
+      },
+      credit_card: {
+        secure: true,
+      },
+      customer_details: {
+        first_name: "budi",
+        last_name: "pratama",
+        email: "budi.pra@example.com",
+        phone: "08111222333",
+      },
+    };
+    snap.createTransaction(parameter).then((transaction) => {
+      // transaction token
+      let transactionToken = transaction.token;
+      console.log("transactionToken:", transactionToken);
+      res.status(200).json(transactionToken)
+    });
   }
 }
 

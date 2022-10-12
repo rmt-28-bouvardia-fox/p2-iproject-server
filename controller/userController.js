@@ -11,7 +11,6 @@ class UserController {
                     email
                 }
             })
-
             if(!user){
                 throw {name : "Invalid email/password"}
             }
@@ -37,14 +36,14 @@ class UserController {
     }
     static async registerUser(req, res, next) {
         try {
-            const { username, password, email, phoneNumber, longtitude, latitude } =
+            const { username, password, email, phoneNumber, longitude, latitude } =
         req.body;
       const newUser = await User.create({
         username,
         password,
         email,
         phoneNumber,
-        longtitude,
+        longtitude : longitude,
         latitude
       })
       res
