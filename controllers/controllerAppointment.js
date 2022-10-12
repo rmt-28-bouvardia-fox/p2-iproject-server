@@ -93,15 +93,17 @@ const createConsultReport = async (req, res, next) => {
   try {
     const AppointmentId = +req.params.appointmentId;
     const { diagnosis, needSurgicalAction, needMedicalDrug, cost } = req.body;
-    const consultReport = await ConsultationReport.create({
+    await ConsultationReport.create({
       diagnosis,
       needSurgicalAction,
       needMedicalDrug,
       cost,
       AppointmentId,
     });
-    res.status(201).json(consultReport);
+    await Appointment.update({status: "Complete"}, {where: {id: AppointmentId}})
+    res.status(201).json({message: "Consultation report created, appointment status updated"});
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
