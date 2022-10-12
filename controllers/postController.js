@@ -43,13 +43,41 @@ class PostController {
 
   static async createPosts(req, res, next) {
     try {
-      const { template_id, text0, text1, title } = req.body;
+      const { template_id, text0, text1, text2, text3, text4, text5, title } =
+        req.body;
       const USERNAME = process.env.USERNAME_FLIP;
       const PASSWORD = process.env.PASSWORD_FLIP;
 
+      const arrayBoxes = [];
+
+      if (text0) {
+        arrayBoxes.push({ text: text0.toUpperCase() });
+      }
+      if (text1) {
+        arrayBoxes.push({ text: text1.toUpperCase() });
+      }
+      if (text2) {
+        arrayBoxes.push({ text: text2.toUpperCase() });
+      }
+      if (text3) {
+        arrayBoxes.push({ text: text3.toUpperCase() });
+      }
+      if (text4) {
+        arrayBoxes.push({ text: text4.toUpperCase() });
+      }
+      if (text5) {
+        arrayBoxes.push({ text: text5.toUpperCase() });
+      }
+
       const meme = await axios({
         method: "post",
-        url: `https://api.imgflip.com/caption_image?template_id=${template_id}&username=${USERNAME}&password=${PASSWORD}&text0=${text0}&text1=${text1}`,
+        url: `https://api.imgflip.com/caption_image`,
+        params: {
+          template_id,
+          username: USERNAME,
+          password: PASSWORD,
+          boxes: arrayBoxes,
+        },
       });
 
       if (!meme.data.success) {
