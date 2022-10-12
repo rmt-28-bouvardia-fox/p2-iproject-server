@@ -12,27 +12,8 @@ class NewsController {
         url: "https://newsapi.org/v2/top-headlines",
         params: {
           country,
-          apiKey: "00a0bec52a3b49978784f968d4342653",
+          apiKey: process.env.NEWS_SECRET,
           category,
-        },
-      });
-
-      await res.status(200).json(data);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  static async getNewsSources(req, res, next) {
-    try {
-      const { country } = req.query;
-
-      const { data } = await axios({
-        url: "https://newsapi.org/v2/top-headlines/sources",
-        method: "get",
-        params: {
-          country,
-          apiKey: "00a0bec52a3b49978784f968d4342653",
         },
       });
 
@@ -54,7 +35,7 @@ class NewsController {
     let snap = new midtransClient.Snap({
       // Set to true if you want Production Environment (accept real transaction).
       isProduction: false,
-      serverKey: "SB-Mid-server-ocSqyIyZrV22NwlKhRJSxQtQ",
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
     });
 
     let parameter = {
@@ -91,7 +72,7 @@ class NewsController {
         { where: { id: req.user.id } }
       );
 
-      res.status(200).json(user.status);
+      res.status(200).json({ message: "Success become our subscriber" });
     } catch (error) {
       next(error);
     }

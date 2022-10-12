@@ -9,7 +9,7 @@ class WeatherController {
         url: "http://dataservice.accuweather.com/locations/v1/cities/search",
         method: "get",
         params: {
-          apikey: "Ac7bmZBHnAMUOpYsWUWGmpCSdVjmQAGn",
+          apikey: process.env.WEATHER_SECRET,
           q: city,
         },
       });
@@ -20,7 +20,7 @@ class WeatherController {
         url: `http://dataservice.accuweather.com/currentconditions/v1/${key}`,
         method: "get",
         params: {
-          apikey: "Ac7bmZBHnAMUOpYsWUWGmpCSdVjmQAGn",
+          apikey: process.env.WEATHER_SECRET,
         },
       });
 
@@ -39,7 +39,7 @@ class WeatherController {
         url: "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search",
         method: "get",
         params: {
-          apikey: "Ac7bmZBHnAMUOpYsWUWGmpCSdVjmQAGn",
+          apikey: process.env.WEATHER_SECRET,
           q: location,
         },
       });
