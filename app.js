@@ -130,12 +130,24 @@ app.post("/getCardDetails", async (req, res, next) => {
 
 app.get("/searchCard", async (req, res, next) => {
   try {
-    const { query, offset, num } = req.query;
+    const { query, offset, num, type, race, attribute } = req.query;
 
     let params = {};
 
     if (query) {
       params.fname = query;
+    }
+
+    if (type) {
+      params.type = type;
+    }
+
+    if (race) {
+      params.race = race;
+    }
+
+    if (attribute) {
+      params.attribute = attribute;
     }
 
     if (offset && num) {
