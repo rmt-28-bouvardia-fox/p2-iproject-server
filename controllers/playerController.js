@@ -27,14 +27,14 @@ class Controller{
             if (!playerDB) {
                 throw { name: 'no_credentials' }
             }
-            const player = await Player.findOne({ where: { name: playerDB.name, TeamId } })
+            const player = await Player.findOne({ where: { name: playerDB.name, TeamId, TeamId } })
             if (player) {
                 throw { name: 'bad_request', err: `Your team already have ${player.name}!` }
             }
             const price = calculatePrice(playerDB.rating)
             const team = await Team.findOne({ where: { id: TeamId } })
             if (team.money < price) {
-                throw { name: 'error_buy' }
+                throw { name: 'error_buy', err: `You don't have enough money!` }
             }
             const { name, rating, position, number, photo } = playerDB
             const newPlayer = await Player.create({ TeamId, name, rating, position, number, photo, price })
@@ -69,7 +69,7 @@ class Controller{
             const price = calculatePrice(rating)
             await Player.create({ TeamId, name, rating, position, number, photo, price })
             Team.decrement({ money: gatchaFee }, { where: { id: TeamId } })
-            res.status(201).json({ message: `Yeay, you success to recruiting ${name} for ${team.name} with $2000` })
+            res.status(201).json({ message: `Yeay, you got ${name}` })
         } catch (error) {
             next(error)
         }
@@ -77,11 +77,32 @@ class Controller{
 
     static async showAllPlayers(req, res, next) {
         try {
+            if (req.query.search) {
+                search = req.query.search
+            }
+            const players = await PlayerM.find()
+            
+            res.status(200).json(players)
+        } catch (error) {
+            next(error)
+        }
+    }
+    static async showStorePlayers(req, res, next) {
+        try {
+            let search = ''
+            if (req.query.search) {
+                search = req.query.search
+            }
+            const re = new RegExp(search)
             const { page } = req.query || 0
             const playersPerPage = 12
-            const players = await PlayerM.find()
-                .skip(page* playersPerPage)
+            const players = await PlayerM.find({
+                name: re
+            })
+                .skip(page * playersPerPage)
                 .limit(12)
+                .sort({name: 1})
+            
             res.status(200).json(players)
         } catch (error) {
             next(error)
@@ -129,7 +150,6 @@ class Controller{
             Team.increment({ money: price }, { where: { id: TeamId } })
             res.status(200).json({ message: `Successful selling ${playerFound.name} for $ ${price}` })
         } catch (error) {
-            console.log(error);
             next(error)
         }
     }

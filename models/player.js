@@ -21,16 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     number: DataTypes.INTEGER,
     price: DataTypes.INTEGER,
     photo: DataTypes.STRING,
-    starter: DataTypes.BOOLEAN,
     TeamId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Player',
-    hooks: {
-      beforeCreate(player) {
-        player.starter = false
-      }
-    }
   });
   return Player;
 };

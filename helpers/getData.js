@@ -42,4 +42,21 @@ async function getPlayers(TeamId) {
     return players
 
 }
-module.exports = getPlayers
+
+async function getOpponents(TeamId) {
+    var { data } = await axios({
+        url: `${apiSportUrl}/players/squads?team=${TeamId}`,
+        methods: 'GET',
+        headers: {
+            "x-rapid-host": xRapidApiHost,
+            "x-rapidapi-key": xRapidApiKey
+        }
+    })
+    const name = await data.response[0].team.name
+    let rating = (Math.random() * 1.5 + 8).toFixed(2)
+    const logo = await data.response[0].team.logo
+    const team = { name, rating, logo }
+    return team
+}
+
+module.exports = {getPlayers, getOpponents}

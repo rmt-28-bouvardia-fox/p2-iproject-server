@@ -2,8 +2,9 @@ const PlayerController = require('../controllers/playerController')
 const router = require('express').Router()
 const myPlayerRouter = require('./myPlayersRouter')
 
-router.get('/', PlayerController.showAllPlayers)
+router.get('/', PlayerController.showStorePlayers)
 router.post('/randomBuy', PlayerController.getRandomPlayer)
+router.get('/allPlayers', PlayerController.showAllPlayers)
 
 router.use('/myPlayers', myPlayerRouter)
 
