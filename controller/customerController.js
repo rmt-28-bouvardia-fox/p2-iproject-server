@@ -16,7 +16,7 @@ class Controller {
         password,
         steamUrl,
       });
-      res.status(201).json({ message: `${newUser.id}, ${newUser.email}` });
+      res.status(201).json({ id: `${newUser.id}`, email: `${newUser.email}` });
     } catch (error) {
       next(error);
     }
@@ -164,42 +164,8 @@ class Controller {
         console.log("transactionToken:", transactionToken);
         res.status(200).json({ transactionToken });
       });
-
-      // NODEMAILER
-      // const transporter = nodemailer.createTransport({
-      //   service: "gmail",
-      //   auth: {
-      //     user: process.env.ID_GMAIL,
-      //     pass: process.env.PASS_GMAIL,
-      //   },
-      // });
-      // console.log(process.env.ID_GMAIL);
-      // console.log(process.env.PASS_GMAIL);
-      // const mailOptions = {
-      //   from: process.env.ID_GMAIL,
-      //   to: email,
-      //   subject: "mail from gift game",
-      //   text: `terima kasih sudah membeli gamenya ${title} seharga ${price}`,
-      // };
-      // transporter.sendMail(mailOptions, (err, info) => {
-      //   if (err) {
-      //     console.log(err, "masuk ke error");
-      //   }
-      //   console.log("Email sent: " + info.response);
-      // });
     } catch (error) {
       console.log(error);
-      next(error);
-    }
-  }
-
-  static async addOrder(req, res, next) {
-    try {
-      const { title, price, imageUrl } = req.body;
-      let UserId = req.user.id;
-      const data = await Order.create({ title, price, imageUrl, UserId });
-      res.status(201).json({ message: `sukses order` });
-    } catch (error) {
       next(error);
     }
   }
