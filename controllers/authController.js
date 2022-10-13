@@ -4,7 +4,8 @@ const { compare } = require('../helper/bcrypt')
 const { createToken } = require('../helper/jwt')
 const { OAuth2Client } = require('google-auth-library')
 const Client_Id = process.env.Client_Id 
-import { createAvatar } from '@dicebear/avatars'
+const { createAvatar } = require('@dicebear/avatars')
+const style = require('@dicebear/big-ears-neutral')
 
 class Controller {
 
@@ -96,11 +97,17 @@ class Controller {
 
             const access_token = createToken(payload)
 
+            const svg = createAvatar(style,{
+                s:`custom-seed`,
+                b:`variant01`
+            })
+
             res.status(200).json({
                 access_token : access_token,
                 id:user.id,
                 status:user.status,
-                username:user.username
+                username:user.username,
+                img:svg
             })
         } catch (err) {
             next(err)
