@@ -1,6 +1,7 @@
 const axios = require("axios");
 const { News, User } = require("../models");
 const midtransClient = require("midtrans-client");
+const nodemailer = require("nodemailer");
 
 class NewsController {
   static async getTopHeadlinesNews(req, res, next) {
@@ -73,6 +74,36 @@ class NewsController {
       );
 
       res.status(200).json({ message: "Success become our subscriber" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async sendEmail(req, res, next) {
+    try {
+      const user = await User.findByPk(req.user.id);
+
+      if (!user) {
+        throw { name: "invalid_credential" };
+      }
+
+      const transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        auth: {
+          user: "ally.durgan52@ethereal.email",
+          pass: "EjcdNG3jxuBZBXFXEs",
+        },
+      });
+
+      let info = await transporter.sendMail({
+        from: '"The Hacktiv Times" <hacktivtimes@mail.com>',
+        to: `${user.email}`,
+        subject: "Hacktiv Times Subscription",
+        text: "Thank you for subscribe our latter",
+      });
+
+      res.status(200).json({ message: nodemailer.getTestMessageUrl(info) });
     } catch (error) {
       next(error);
     }
