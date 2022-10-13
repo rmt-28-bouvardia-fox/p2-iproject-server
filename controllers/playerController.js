@@ -90,9 +90,7 @@ class Controller{
     static async showStorePlayers(req, res, next) {
         try {
             let search = ''
-            if (req.query.search) {
-                search = req.query.search
-            }
+            search = req.query.search
             let playersPerPage = null
             if (req.query.page) {
                 playersPerPage = 12
@@ -103,7 +101,7 @@ class Controller{
                 name: re
             })
                 .skip(page * playersPerPage)
-                .limit(playersPerPage)
+                .limit(12)
                 .sort({name: 1})
             
             res.status(200).json(players)
