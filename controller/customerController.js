@@ -1,9 +1,10 @@
-const { User, Wishlist } = require("../models");
+const { User, Wishlist, Order } = require("../models");
 const { createToken } = require("../helpers/jwt");
 const { compare } = require("../helpers/bcrypt");
 const axios = require("axios");
 const nodemailer = require("nodemailer");
 const midtransClient = require("midtrans-client");
+const order = require("../models/order");
 
 class Controller {
   static async customerRegister(req, res, next) {
@@ -192,30 +193,29 @@ class Controller {
     }
   }
 
-  // static async gitHubSignIn(req, res, next) {
-  //   try {
-  //     const { gitToken } = req.body;
-  //     if (!gitToken) {
-  //       throw { name: `invalid_credentials` };
-  //     }
-  //     const [user, created] = await User.findOrCreate({
-  //       where: { username: gitToken },
-  //       defaults: {
-  //         username: gitToken,
-  //         email: `${gitToken}@gmail.com`,
-  //         password: "gitHub",
-  //       },
-  //       hooks: false,
-  //     });
-  //     const payload = {
-  //       id: user.id,
-  //     };
-  //     const access_token = createToken(payload);
-  //     res.status(200).json({ access_token });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+  static async addOrder(req, res, next) {
+    try {
+      const { title, price, imageUrl } = req.body;
+      let UserId = req.user.id;
+      const data = await Order.create({ title, price, imageUrl, UserId });
+      res.status(201).json({ message: `sukses order` });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async fetchOrder(req, res, next) {
+    try {
+      const data = await Order.findAll({
+        where: {
+          UserId: req.user.id,
+        },
+      });
+      res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = Controller;
