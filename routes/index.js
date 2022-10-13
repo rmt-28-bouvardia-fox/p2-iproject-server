@@ -11,7 +11,6 @@ router.get("/authentication", UserController.authentication);
 router.post("/githubSignIn", UserController.githubSignIn);
 router.post("/twitterSignIn", UserController.twitterSignIn);
 router.get("/posts", PostController.showAllPosts);
-router.post("/simsimi", UserController.simsimi);
 
 router.use(authentication);
 

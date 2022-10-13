@@ -132,29 +132,6 @@ class UserController {
       next(error);
     }
   }
-
-  static async simsimi(req, res, next) {
-    try {
-      const { message } = req.body;
-      const result = await axios({
-        method: "post",
-        url: "https://wsapi.simsimi.com/190410/talk",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": "iqR7cNRA._VIrMU_D_eoVIeih1uUiEhUpra.G43y",
-        },
-        data: {
-          utext: message,
-          lang: "en",
-          atext_bad_prob_max: 0.7,
-        },
-      });
-
-      res.status(200).json({ message: result.data.atext });
-    } catch (error) {
-      next(error);
-    }
-  }
 }
 
 module.exports = UserController;
