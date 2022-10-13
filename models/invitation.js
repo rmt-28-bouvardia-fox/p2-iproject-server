@@ -101,7 +101,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       TemplateId: {
         type: DataTypes.INTEGER,
-        allowNull:true
+        allowNull:false,
+        validate: {
+          notEmpty: { msg: "Template is required" },
+          notNull: { msg: "Template is required" },
+        },
       },
       maps: {
         type: DataTypes.TEXT,
