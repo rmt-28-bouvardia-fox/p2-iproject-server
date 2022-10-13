@@ -192,15 +192,40 @@ class PostController {
 
   static async createMemeMulter(req, res, next) {
     try {
-      const { title } = req.body;
-      const { path } = req.file;
+      const { path, filename, originalname } = req.file;
 
-      const post = await Post.create({
-        title,
-        imageUrl: path,
-        UserId: req.user.id,
+      const title = originalname.split(".")[0];
+
+      var ImageKit = require("imagekit");
+      const fs = require("fs");
+
+      const imagekit = new ImageKit({
+        publicKey: "public_bXQ7uTQf2/6T6321VRr80OJVjW8=",
+        privateKey: "private_urjFImwY9MuKMsyuLsratYMWjYU=",
+        urlEndpoint: "https://ik.imagekit.io/qjbbuf38o/",
       });
-      res.status(201).json(post);
+
+      fs.readFile(`./uploads/${filename}`, function (err, data) {
+        if (err) throw err; // Fail if the file can't be read.
+        imagekit.upload(
+          {
+            file: data, //required
+            fileName: filename, //required
+            tags: ["tag1", "tag2"],
+          },
+          function (error, result) {
+            if (error) console.log(error);
+            else console.log(result);
+            Post.create({
+              title,
+              imageUrl: result.url,
+              UserId: req.user.id,
+            });
+          }
+        );
+      });
+
+      res.status(201).json({ message: "ok" });
     } catch (error) {
       next(error);
     }
