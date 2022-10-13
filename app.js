@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== "production") {
   //cuma dipakai di tahap development dan testing
 }
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 const cors = require("cors");
 const express = require("express");
 const app = express();

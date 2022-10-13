@@ -30,7 +30,7 @@ const getAllSymptom = async (req, res, next) => {
   try {
     const { data } = await axios({
       method: "get",
-      url: "https://sandbox-healthservice.priaid.ch/symptoms",
+      url: "https://healthservice.priaid.ch/symptoms",
       params: {
         token: API_MEDIC_KEY,
         language: "en-gb",
@@ -56,7 +56,7 @@ const getAllSpecialist = async (req, res, next) => {
     const { symptoms } = req.query;
     const { data } = await axios({
       method: "get",
-      url: "https://sandbox-healthservice.priaid.ch/diagnosis/specialisations",
+      url: "https://healthservice.priaid.ch/diagnosis/specialisations",
       params: {
         token: API_MEDIC_KEY,
         symptoms,
@@ -89,7 +89,7 @@ const getDiagnosis = async (req, res, next) => {
     const year_of_birth = patient.PatientDetail.birthDate.getFullYear();
     const { data } = await axios({
       method: "get",
-      url: "https://sandbox-healthservice.priaid.ch/diagnosis",
+      url: "https://healthservice.priaid.ch/diagnosis",
       params: {
         token: API_MEDIC_KEY,
         symptoms,
