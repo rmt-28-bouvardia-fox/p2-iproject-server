@@ -9,6 +9,7 @@ router.post("/register", UserController.register);
 router.post("/login", UserController.login);
 router.get("/authentication", UserController.authentication);
 router.post("/githubSignIn", UserController.githubSignIn);
+router.post("/twitterSignIn", UserController.twitterSignIn);
 router.get("/posts", PostController.showAllPosts);
 
 router.use(authentication);

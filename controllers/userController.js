@@ -106,6 +106,32 @@ class UserController {
       next(error);
     }
   }
+
+  static async twitterSignIn(req, res, next) {
+    try {
+      const { twitterToken } = req.body;
+
+      if (!twitterToken) {
+        throw { name: "invalid_credential" };
+      }
+
+      const [user, created] = await User.findOrCreate({
+        where: { username: twitterToken },
+        defaults: {
+          username: twitterToken,
+          email: `${twitterToken}@twitter.com`,
+          password: "twitter",
+        },
+        hooks: false,
+      });
+
+      const access_token = generateToken({ id: user.id });
+
+      res.status(200).json({ access_token });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = UserController;
