@@ -73,6 +73,7 @@ class Controller {
       });
 
       //generate token jwt
+      sendMail(user)
       const access_token = createToken({ id: user.id });
       res.status(200).json({ message: "User created", access_token });
     } catch (error) {
