@@ -3,6 +3,7 @@ const controllerPatient = require("../controllers/controllerPatient")
 
 router.post("/register", controllerPatient.registerPatient)
 router.post("/login", controllerPatient.loginPatient)
+router.post("/google-sign-in", controllerPatient.loginGoogle);
 router.use(require("../middlewares/loginAuthentication"))
 router.use(require("../middlewares/patientAuthorization"))
 router.get("/patientdetails", controllerPatient.getPatientDetail)
