@@ -1,0 +1,38 @@
+{
+  "name": "ygoxchange-server",
+  "version": "1.0.0",
+  "description": "Individual Project - Server",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chossypratama/p2-iproject-server.git"
+  },
+  "author": "Chossy Pratama",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chossypratama/p2-iproject-server/issues"
+  },
+  "homepage": "https://github.com/chossypratama/p2-iproject-server#readme",
+  "dependencies": {
+    "axios": "^1.1.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "firebase": "^9.11.0",
+    "google-auth-library": "^8.5.2",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.8.0",
+    "sequelize": "^6.23.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "jest": "^29.1.2",
+    "sequelize-cli": "^6.5.1",
+    "supertest": "^6.3.0"
+  }
+}
