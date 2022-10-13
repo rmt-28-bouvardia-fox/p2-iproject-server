@@ -22,10 +22,10 @@ const midtransHandler = async (req, res, next) => {
       isProduction: false,
       serverKey: MIDTRANS_SERVER_KEY,
     });
-
+    let orderId = `${Date.now()}`.slice(6,12)
     let parameter = {
       transaction_details: {
-        order_id: `APPOINTMENT-123${appointment.id}`,
+        order_id: `APPOINTMENT-${orderId}${appointment.id}`,
         gross_amount: +cost,
       },
       credit_card: {
