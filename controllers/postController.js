@@ -205,27 +205,19 @@ class PostController {
         urlEndpoint: "https://ik.imagekit.io/qjbbuf38o/",
       });
 
-      fs.readFile(`./uploads/${filename}`, function (err, data) {
-        if (err) throw err; // Fail if the file can't be read.
-        imagekit.upload(
-          {
-            file: data, //required
-            fileName: filename, //required
-            tags: ["tag1", "tag2"],
-          },
-          function (error, result) {
-            if (error) console.log(error);
-            else console.log(result);
-            Post.create({
-              title,
-              imageUrl: result.url,
-              UserId: req.user.id,
-            });
-          }
-        );
+      const fileUploaded = fs.readFileSync(`./uploads/${filename}`);
+      const result = await imagekit.upload({
+        file: fileUploaded, //required
+        fileName: filename, //required
       });
 
-      res.status(201).json({ message: "ok" });
+      const post = await Post.create({
+        title,
+        imageUrl: result.url,
+        UserId: req.user.id,
+      });
+
+      res.status(201).json(post);
     } catch (error) {
       next(error);
     }
