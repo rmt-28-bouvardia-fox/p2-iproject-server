@@ -11,6 +11,7 @@ List of available endpoints:
 - `PATCH /news/status`
 - `GET /weather`
 - `GET /weather/geolocations`
+- `POST /news/mail`
 
 &nbsp;
 
@@ -445,6 +446,42 @@ _Response (200 - OK)_
   ]
 }
 ```
+
+&nbsp;
+
+## 8 POST /news/mail
+
+Description:
+
+- Send email to users
+
+Request:
+
+- headers :
+
+```json
+{
+  "access_token": "string"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "string"
+}
+```
+
+_Response (401 - Unauthorized)_
+
+```json
+{
+  "message": "Invalid email/password"
+}
+```
+
+&nbsp;
 
 ## Global Error
 
