@@ -1,0 +1,39 @@
+{
+  "name": "p2-iproject-server",
+  "version": "1.0.0",
+  "description": "Individual Project - Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fadilahagiel/p2-iproject-server.git"
+  },
+  "keywords": [],
+  "author": "Fadilah Agiel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fadilahagiel/p2-iproject-server/issues"
+  },
+  "homepage": "https://github.com/fadilahagiel/p2-iproject-server#readme",
+  "dependencies": {
+    "axios": "^1.1.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.10.0",
+    "mongoose": "^6.6.5",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.8.0",
+    "pg": "^8.8.0",
+    "sequelize": "^6.23.1",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "vite": "^3.1.3"
+  }
+}
