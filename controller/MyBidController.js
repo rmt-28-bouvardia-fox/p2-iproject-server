@@ -232,7 +232,7 @@ const paymentBid = async (req, res, next) => {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: "Basic " + Buffer.from("SB-Mid-server-4rr4Bjd0BS96pkTbn_9YXtrP").toString("base64"),
+        Authorization: "Basic " + Buffer.from(process.env.MIDTRANS_KEY).toString("base64"),
         // Above is API server key for the Midtrans account, encoded to base64
       },
       data:

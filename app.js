@@ -2,7 +2,7 @@ const axios = require("axios");
 const cors = require("cors");
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const router = require("./routes");
 
 const errorHandler = require("./middlewares/errorHandler");
