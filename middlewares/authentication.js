@@ -1,5 +1,5 @@
 const { verify } = require("../helpers/jwt")
-const  { User } = require("../models")
+const  { User, Arisan } = require("../models")
 
 
 const authentication = async (req, res, next) => {
@@ -14,7 +14,8 @@ const authentication = async (req, res, next) => {
             throw { name : "Invalid token"}
         }
         req.user = {
-            id: user.id
+            id: user.id,
+            email : user.email
         }
         next()
     } catch (error) {

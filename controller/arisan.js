@@ -44,8 +44,8 @@ class Controller {
   }
   static async addMyArisan(req, res, next) {
     try {
-      const { longtitude, latitude } = req.body;
-      if (!longtitude || !latitude) {
+      const { longitude, latitude } = req.body;
+      if (!longitude || !latitude) {
         throw { name: "Location Needed" };
       }
       const find = await MyArisan.findOne({
@@ -63,8 +63,9 @@ class Controller {
           ArisanId: +req.params.id,
           UserId: +req.user.id,
         });
+        // console.log(made)
         await User.update(
-          { longtitude, latitude },
+          { longtitude : longitude, latitude },
           {
             where: {
               id: req.user.id,
@@ -89,9 +90,8 @@ class Controller {
           subject: "Tagihan Arisan",
           text:
             "Tagihan hari ini adalah \n" +
-            `https://link.dana.id/minta/2r5xsk35jr6`,
+            `Segera Bayar Tagihan Anda, harap tidak terlambat \n hehe.`,
         };
-
         transporter.sendMail(options, (err, info) => {
           if (err) {
             console.log(err);
@@ -113,8 +113,9 @@ class Controller {
         where: {
           UserId: req.user.id,
         },
-        include: [Arisan],
+        include: [Arisan,User],
       });
+      // console.log(result)
       res.status(200).json(result);
     } catch (error) {
       next(error);
@@ -163,15 +164,19 @@ class Controller {
           },
         }
       );
-      const { longtitude, latitude } = req.body;
+      const { longitude, latitude } = req.body;
       await User.update(
-        { longtitude, latitude },
+        { longtitude : longitude, latitude },
         {
           where: {
             id: req.user.id,
           },
         }
       );
+      await LogTran.create({
+        ArisanId: +req.params.id,
+        UserId: +req.user.id,
+      });
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -209,12 +214,12 @@ class Controller {
     }
   }
   static async midtrans(req, res, next) {
-    let snap = new midtransClient.Snap({
+    try {
+      let snap = new midtransClient.Snap({
       // Set to true if you want Production Environment (accept real transaction).
       isProduction: false,
       serverKey: "SB-Mid-server-qjWt8PBvtX45mmB4ztQBs9bq",
     });
-    // const findAmount = Arisan.findOne()
     let parameter = {
       transaction_details: {
         order_id: `${Math.floor(Math.random()*100) + 1}`,
@@ -236,7 +241,14 @@ class Controller {
       console.log("transactionToken:", transactionToken);
       res.status(200).json(transactionToken)
     });
+    } catch (error) {
+      next(error)
+    }
+    
   }
 }
+
+
+
 
 module.exports = Controller;
