@@ -139,11 +139,17 @@ class Controller {
                 email:user.email || created.email
             })
 
+            const svg = createAvatar(style,{
+                s:`custom-seed`,
+                b:`variant02`
+            })
+
             res.status(200).json({
                 access_token,
                 id:user.id || created.id,
                 username:user.username || created.username,
-                status:user.status || created.status
+                status:user.status || created.status,
+                img:svg
             })
         } catch (err) {
             next(err)
