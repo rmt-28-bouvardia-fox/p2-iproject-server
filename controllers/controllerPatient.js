@@ -3,6 +3,8 @@ const { compare } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 const axios = require("axios");
 const ABSTRACT_API_KEY = process.env.ABSTRACT_API_KEY;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const { OAuth2Client } = require("google-auth-library");
 
 const registerPatient = async (req, res, next) => {
   const { email, password } = req.body;
@@ -54,27 +56,52 @@ const loginPatient = async (req, res, next) => {
     next(error);
   }
 };
+const loginGoogle = async (req, res, next) => {
+  try {
+    const { google_token } = req.headers;
+    const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+    const ticket = await client.verifyIdToken({
+      idToken: google_token,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.payload;
+    const [patient, created] = await Patient.findOrCreate({
+      where: { email: payload.email },
+      defaults: {
+        email: payload.email,
+        password: "google_auth",
+      },
+      hooks: false,
+    });
+    const access_token = createToken({
+      id: patient.id,
+      email: patient.email,
+    });
+    res.status(200).json({ access_token });
+  } catch (error) {
+    next(error);
+  }
+};
 const getPatientDetail = async (req, res, next) => {
   try {
-    const id = +req.user.id
-    const patient = await PatientDetail.findOne({where: {PatientId: id}})
-    if(!patient) {
-      throw {name: "data_not_found"}
+    const id = +req.user.id;
+    const patient = await PatientDetail.findOne({ where: { PatientId: id } });
+    if (!patient) {
+      throw { name: "data_not_found" };
     }
-    res.status(200).json(patient)
+    res.status(200).json(patient);
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
-
+};
 const createDetail = async (req, res, next) => {
   try {
     const id = +req.user.id;
     const { name, birthDate, address, gender, bloodType, diseaseHistory } =
       req.body;
-    const duplicate = await PatientDetail.findOne({where: {PatientId: id}})
-    if(duplicate) {
-      throw {name: "duplicate_patient_details"}
+    const duplicate = await PatientDetail.findOne({ where: { PatientId: id } });
+    if (duplicate) {
+      throw { name: "duplicate_patient_details" };
     }
     const patientDetail = await PatientDetail.create({
       name,
@@ -120,4 +147,11 @@ const updateDetail = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { registerPatient, loginPatient, getPatientDetail, createDetail, updateDetail };
+module.exports = {
+  registerPatient,
+  loginPatient,
+  loginGoogle,
+  getPatientDetail,
+  createDetail,
+  updateDetail,
+};
