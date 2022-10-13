@@ -25,6 +25,7 @@ class TeamController {
                 },
                 where: { UserId }
             })
+            
             if (!team) {
                 throw { name: 'invalid_credentials' }
             }
