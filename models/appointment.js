@@ -46,7 +46,12 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notNull: { msg: "Appointment date is required" },
           notEmpty: { msg: "Appointment date is required" },
+          isTomorrow(value) {
+            if (new Date(value) < new Date()) {
+              throw new Error('Please choose the date starting tomorrow')
+            }
         },
+        }
       },
       status: DataTypes.STRING,
       PatientId: {
