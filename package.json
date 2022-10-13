@@ -26,7 +26,8 @@
   },
   "scripts": {
     "test": "jest --runInBand --forceExit",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "start" : "node .bin/www"
   },
   "repository": {
     "type": "git",
