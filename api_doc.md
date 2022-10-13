@@ -12,6 +12,7 @@
 - `GET /posts/memes`
 - `POST /posts/:id/like`
 - `GET /posts/:id`
+- `POST /posts/memeMulter`
 
 &nbsp;
 
@@ -555,3 +556,117 @@ _Response (404 - Not Found)_
   "message": "Post Not Found"
 }
 ```
+
+&nbsp;
+
+## 11. POST /posts/memeMulter
+
+Description:
+
+- Create posts to database using multer + imagekit 
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string"
+}
+```
+
+- body:
+
+```json
+{
+  "file": "image",
+}
+```
+
+- user:
+
+```json
+{
+  "id": "integer",
+  "email": "string"
+}
+```
+
+_Response (201 - Created)_
+
+```json
+{
+  "id": "integer",
+  "title": "string",
+  "imageUrl": "string",
+  "UserId": "integer",
+  "updatedAt": "date",
+  "createdAt": "date"
+}
+```
+
+_Response (400 - Bad Request)_
+
+```json
+{
+  "message": "Title is required"
+}
+OR
+{
+  "message": "Image is Required"
+}
+OR
+{
+  "message": "Image url format is required"
+}
+OR
+{
+  "name": "imgflip_error",
+  "message": "message: meme.data.error_message"
+}
+
+
+```
+
+_Response (401 - Unauthorized)_
+
+```json
+{
+  "message": "Invalid Token"
+}
+```
+
+_Response (403 - Forbidden)_
+
+```json
+{
+  "message": "Not Authorize"
+}
+```
+
+## Global Error
+
+_Response (401 - Unauthorized)_
+
+```json
+{
+  "message": "Invalid Token"
+}
+```
+
+_Response (403 - Forbidden)_
+
+```json
+{
+  "message": "Not Authorize"
+}
+```
+
+_Response (500 - Internal Server Error)_
+
+```json
+{
+  "message": "Internal server error"
+}
+```
+
