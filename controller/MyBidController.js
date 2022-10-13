@@ -68,7 +68,7 @@ const saveBid = async (req, res, next) => {
       note: notes,
     });
 
-    res.status(200).json({ message: "Success add new bid" });
+    res.status(201).json({ message: "Success add a new bid" });
   } catch (error) {
     next(error);
   }

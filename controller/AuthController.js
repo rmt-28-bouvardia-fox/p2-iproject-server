@@ -11,7 +11,6 @@ const getUser = async (req, res, next) => {
   }
 }
 
-
 const postRegister = async (req, res, next) => {
   try {
     const { username, email, password, phoneNumber } = req.body;

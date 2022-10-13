@@ -24,7 +24,7 @@ const errorHandler = (err, req, res, next) => {
     message = "Current Price is required";
   } else if (err.name === "bid_less_than_currentPrice") {
     code = 400;
-    message = "Bid must be higher than Current Bid";
+    message = "New Bid must be higher than Current Bid";
   } else if (err.name === "already_bidded") {
     code = 400;
     message = "You already bid on this item";

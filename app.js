@@ -7,10 +7,6 @@ const router = require("./routes");
 
 const errorHandler = require("./middlewares/errorHandler");
 
-const firebase = require("./config/firebase.config");
-const { ref, get, push, child, update, query, remove, orderByChild, equalTo } = require("firebase/database");
-const dbRef = ref(firebase, "/bids");
-
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
   // console.log(process.env.NODE_ENV)
