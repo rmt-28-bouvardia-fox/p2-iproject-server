@@ -10,9 +10,14 @@ router.post('/login', UserController.login)
 
 router.use(authentication)
 
+router.get('/mainComodity', ProductController.mainComodity)
+
 router.get('/products', ProductController.getAll)
 router.get('/products/:id', ProductController.findOne)
 router.patch('/startBid/:id', ProductController.startBid)
+
+router.get('/biddingHit', ProductController.mailer)
+router.post('/pay', ProductController.pay)
 
 router.post('/myBidList/:productId', ProductController.newList)
 router.get('/myBidList', ProductController.getAllList)

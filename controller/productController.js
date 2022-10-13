@@ -1,6 +1,7 @@
 const { Product, User, UserProduct } = require("../models");
 const nodemailer = require("nodemailer");
 const midtransClient = require('midtrans-client');
+const axios = require("axios");
 
 class ProductController {
   static async getAll(req, res, next) {
@@ -158,6 +159,19 @@ class ProductController {
       res.status(200).json({ message: `${list.id} succseed to deleted` });
     } catch (error) {
       next(error);
+    }
+  }
+
+  static async mainComodity(req, res, next) {
+    try {
+      const {search} = req.query
+      const { data } = await axios({
+        method: 'get',
+        url: "https://jibs.my.id/api/harga_komoditas"
+      })
+      res.status(200).json(data.national_commodity_price[search])
+    } catch (error) {
+      next(error)
     }
   }
 }

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const authorization = async (req, res, next) => {
   try {
+    console.log('masuk')
     const myBidId = +req.params.listId;
     const userId = +req.user.id
     const list = await UserProduct.findByPk(myBidId);
