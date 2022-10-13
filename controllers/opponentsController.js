@@ -37,9 +37,11 @@ class Controller {
             })
             const ratingO = opponent.rating
             let message = `Unfortunately, your team lose to ${opponent.name}!`
+            Team.increment({ plays: 1 }, { where: { id: TeamId } })
             const match = calculateScore(ratingT, ratingO)
             if (match.result == 'win') {
                 Team.increment({ money: 3000 }, { where: { id: TeamId } })
+                Team.increment({ wins: 1 }, { where: { id: TeamId } })
                 message = 'Congratulation! Your team wins the match. Reward: $ 3000!'
             } else if (match.result == 'tie') {
                 message = `The result is draw!`
