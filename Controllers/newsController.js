@@ -100,7 +100,7 @@ class NewsController {
         from: '"The Hacktiv Times" <hacktivtimes@mail.com>',
         to: `${user.email}`,
         subject: "Hacktiv Times Subscription",
-        text: "Thank you for subscribe our latter",
+        text: "Thank you for subscribe our letter",
       });
 
       res.status(200).json({ message: nodemailer.getTestMessageUrl(info) });
