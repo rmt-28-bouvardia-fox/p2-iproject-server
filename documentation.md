@@ -85,7 +85,8 @@ _Response (200 - OK)_
   "access_token": "string",
   "id": "integer",
   "username": "string",
-  "status": "string"
+  "status": "string",
+  "img": "string"
 }
 ```
 
