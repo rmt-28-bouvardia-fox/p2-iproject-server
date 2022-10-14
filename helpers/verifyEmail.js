@@ -1,20 +1,21 @@
 const axios = require('axios');
+const { stringify } = require('querystring');
 
 function verifyEmail(req, res, next){
     const {email} = req.body
     const options = {
         method: 'GET',
-        url: 'https://email-checker.p.rapidapi.com/verify/v1',
-        params: {email},
-        headers: {
-          'X-RapidAPI-Key': '933ff4e29amshc9bebe50b519898p189fdfjsn8478560147d8',
-          'X-RapidAPI-Host': 'email-checker.p.rapidapi.com'
+        url: 'https://api.apilayer.com/email_verification/check?email='+ email,
+        Headers: {
+            apikey: 'lM07I8nFwDouINZ0QF09fXWBY75qK0TQ'
         }
       };
-      
-      axios.request(options).then(function (response) {
+      axios.request(options)
+      .then(function (response) {
+        console.log(response)
           res.status(200).json(response)
-      }).catch(function (error) {
+      })
+      .catch(function (error) {
           next(error)
       });
 }
