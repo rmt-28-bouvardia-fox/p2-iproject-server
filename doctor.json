@@ -1,0 +1,202 @@
+[
+  {
+    "email": "doctor1@mail.com",
+    "password": "12345",
+    "name": "Lee Ik-Joon",
+    "specialist": "General practice",
+    "SpecialistId": 15,
+    "imageUrl": "https://i.pinimg.com/736x/7f/be/6f/7fbe6f47057c0e2b0dd4fbd77be41188.jpg"
+  },
+  {
+    "email": "doctor2@mail.com",
+    "password": "12345",
+    "name": "Ahn Jeong-Won",
+    "specialist": "Pediatrics",
+    "SpecialistId": 34,
+    "imageUrl": "https://i.pinimg.com/736x/4c/85/9d/4c859d3f6f14f2948a795d88cffe2dcc.jpg"
+  },
+  {
+    "email": "doctor3@mail.com",
+    "password": "12345",
+    "name": "Kim Jun-Wan",
+    "specialist": "Cardiology",
+    "SpecialistId": 1,
+    "imageUrl": "https://i.pinimg.com/736x/d2/60/ff/d260ff6dc649f0bf6b528bcddcd64e01.jpg"
+  },
+  {
+    "email": "doctor4@mail.com",
+    "password": "12345",
+    "name": "Yang Seok-Hyeong",
+    "specialist": "Gynecology",
+    "SpecialistId": 18,
+    "imageUrl": "https://i.pinimg.com/736x/28/bf/e1/28bfe1177c862557b8a191ea21a5fa44.jpg"
+  },
+  {
+    "email": "doctor5@mail.com",
+    "password": "12345",
+    "name": "Chae Song-hwa",
+    "specialist": "Brain and nerve surgery",
+    "SpecialistId": 984,
+    "imageUrl": "https://i.pinimg.com/564x/83/cd/02/83cd02cbde673e40d43bb50171e3ea45.jpg"
+  },
+  {
+    "email": "doctor6@mail.com",
+    "password": "12345",
+    "name": "Jang Gyeo-Wool",
+    "specialist": "General surgery",
+    "SpecialistId": 991,
+    "imageUrl": "https://i.pinimg.com/736x/c9/6d/08/c96d084e1217d27e45b49b9bd06d90d4.jpg"
+  },
+  {
+    "email": "doctor7@mail.com",
+    "password": "12345",
+    "name": "Chu Min-Ha",
+    "specialist": "Pediatric surgery",
+    "SpecialistId": 1010,
+    "imageUrl": "https://i.pinimg.com/564x/df/72/28/df722811a042b92f44a48f34e8c344cd.jpg"
+  },
+  {
+    "email": "doctor8@mail.com",
+    "password": "12345",
+    "name": "Ye Jin-Woo",
+    "specialist": "Internal Medicine",
+    "SpecialistId": 19,
+    "imageUrl": "https://i.pinimg.com/564x/42/c1/2d/42c12d324d5b36cce4d29c5afb650b48.jpg"
+  },
+  {
+    "email": "doctor9@mail.com",
+    "password": "12345",
+    "name": "Yoon Seo-Jung",
+    "specialist": "Ophthalmology",
+    "SpecialistId": 30,
+    "imageUrl": "https://i.pinimg.com/564x/93/bf/e6/93bfe6ecf8c8af363cbe4fa9ba822159.jpg"
+  },
+  {
+    "email": "doctor10@mail.com",
+    "password": "12345",
+    "name": "Teacher Kim",
+    "specialist": "Dermatology",
+    "SpecialistId": 11,
+    "imageUrl": "https://i.pinimg.com/564x/83/b4/c8/83b4c83280578de6cfdfc9cae3847e6e.jpg"
+  },
+  {
+    "email": "doctor11@mail.com",
+    "password": "12345",
+    "name": "Yoon A-Reum",
+    "specialist": "Oral surgery",
+    "SpecialistId": 45,
+    "imageUrl": "https://i.pinimg.com/564x/1f/31/9b/1f319bdaf3c79e31e0ad1370c51dac5a.jpg"
+  },
+  {
+    "email": "doctor12@mail.com",
+    "password": "12345",
+    "name": "Bae Moon-Jung",
+    "specialist": "Orthopedics",
+    "SpecialistId": 31,
+    "imageUrl": "https://i.pinimg.com/564x/ef/c2/8b/efc28ba41dd9daf03d528865e71feb5c.jpg"
+  },
+  {
+    "email": "doctor13@mail.com",
+    "password": "12345",
+    "name": "Jung In-Soo",
+    "specialist": "Urology",
+    "SpecialistId": 42,
+    "imageUrl": "https://i.pinimg.com/564x/46/7c/a3/467ca31f0fc75b3d0469d4ca80b7a6e3.jpg"
+  },
+  {
+    "email": "doctor14@mail.com",
+    "password": "12345",
+    "name": "Seo Woo-Jin",
+    "specialist": "Neurology",
+    "SpecialistId": 27,
+    "imageUrl": "https://i.pinimg.com/564x/0c/04/a4/0c04a4526d9117607f6d8099de669765.jpg"
+  },
+  {
+    "email": "doctor15@mail.com",
+    "password": "12345",
+    "name": "Yoon Hye-Jin",
+    "specialist": "Dentistry",
+    "SpecialistId": 43,
+    "imageUrl": "https://i.pinimg.com/564x/03/04/4e/03044e48ece07f8124e8c9b6f200b645.jpg"
+  },
+  {
+    "email": "doctor16@mail.com",
+    "password": "12345",
+    "name": "Heo Seon-Bin",
+    "specialist": "Otolaryngology",
+    "SpecialistId": 32,
+    "imageUrl": "https://i.pinimg.com/564x/ff/9b/dd/ff9bdd1d3ab5c30ede10c9ffe5da185d.jpg"
+  },
+  {
+    "email": "doctor17@mail.com",
+    "password": "12345",
+    "name": "Cha Eun-Jae",
+    "specialist": "Oncology",
+    "SpecialistId": 29,
+    "imageUrl": "https://i.pinimg.com/564x/9a/48/e0/9a48e02b98d4fd8bd686d8b19ef4b435.jpg"
+  },
+  {
+    "email": "doctor18@mail.com",
+    "password": "12345",
+    "name": "Kang Shi-Young",
+    "specialist": "Psychiatry",
+    "SpecialistId": 36,
+    "imageUrl": "https://i.pinimg.com/736x/82/13/6a/82136a202532e823751e33620fcff158.jpg"
+  },
+  {
+    "email": "doctor19@mail.com",
+    "password": "12345",
+    "name": "Yong Seok-Min",
+    "specialist": "Endocrinology",
+    "SpecialistId": 12,
+    "imageUrl": "https://i.pinimg.com/564x/e3/10/f3/e310f3e005883307bffad0c5513e5849.jpg"
+  },
+  {
+    "email": "doctor20@mail.com",
+    "password": "12345",
+    "name": "Do Jae-Hak",
+    "specialist": "Nephrology",
+    "SpecialistId": 26,
+    "imageUrl": "https://i.pinimg.com/564x/26/d8/e8/26d8e83389a0e5df203ec5592e230f90.jpg"
+  },
+  {
+    "email": "doctor21@mail.com",
+    "password": "12345",
+    "name": "Cha Yo-Han",
+    "specialist": "Tropical medicine",
+    "SpecialistId": 37,
+    "imageUrl": "https://i.pinimg.com/564x/f7/15/e3/f715e38d68c21c1129eb0074b4a8d493.jpg"
+  },
+  {
+    "email": "doctor22@mail.com",
+    "password": "12345",
+    "name": "Shaun Murphy",
+    "specialist": "Thoracic surgery",
+    "SpecialistId": 992,
+    "imageUrl": "https://i.pinimg.com/564x/7c/49/62/7c49621b5c57adaa3580004693e8077d.jpg"
+  },
+  {
+    "email": "doctor23@mail.com",
+    "password": "12345",
+    "name": "Doctor Strange",
+    "specialist": "Cardiovascular surgery",
+    "SpecialistId": 996,
+    "imageUrl": "https://i.pinimg.com/564x/01/1c/06/011c068e66be160e09797a526bdb927a.jpg"
+  },
+  {
+    "email": "doctor24@mail.com",
+    "password": "12345",
+    "name": "Doctor Glassman",
+    "specialist": "Radiology",
+    "SpecialistId": 40,
+    "imageUrl": "https://i.pinimg.com/564x/72/62/f2/7262f2a80323bb2320262b6bbfc29c16.jpg"
+  },
+  {
+    "email": "doctor25@mail.com",
+    "password": "12345",
+    "name": "Doctor Grey",
+    "specialist": "Hematology",
+    "SpecialistId": 21,
+    "imageUrl": "https://i.pinimg.com/736x/d7/c8/fd/d7c8fdd6c0976e0484ca1a908b4d7803.jpg"
+  }
+]
