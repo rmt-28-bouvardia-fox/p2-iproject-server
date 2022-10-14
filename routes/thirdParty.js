@@ -1,7 +1,7 @@
 const tPApi = require('express').Router()
-const { verifyEmail } = require('../helpers/verifyEmail')
+const ThirdApiController = require('../controllers/thirdApiController')
 
 
-// tPApi.get('/verify', verifyEmail)
+tPApi.get('/verify', ThirdApiController.verifyEmail)
 
 module.exports = tPApi
