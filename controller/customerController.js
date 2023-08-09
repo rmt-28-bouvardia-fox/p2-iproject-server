@@ -138,7 +138,7 @@ class Controller {
       let snap = new midtransClient.Snap({
         // Set to true if you want Production Environment (accept real transaction).
         isProduction: false,
-        serverKey: "SB-Mid-server-4SbP9885175rZWTHMq1UcYPu",
+        serverKey: process.env.MIDTRANS_SERVER,
       });
 
       let parameter = {
