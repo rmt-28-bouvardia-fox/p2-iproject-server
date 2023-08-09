@@ -60,7 +60,6 @@ class Controller {
       const access_token = createToken(payload);
       res.status(200).json({ access_token });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -153,7 +152,7 @@ class Controller {
         customer_details: {
           first_name: "budi",
           last_name: "pratama",
-          email: "budi.pra@example.com",
+          email,
           phone: "08111222333",
         },
       };
@@ -161,11 +160,9 @@ class Controller {
       snap.createTransaction(parameter).then((transaction) => {
         // transaction token
         let transactionToken = transaction.token;
-        console.log("transactionToken:", transactionToken);
         res.status(200).json({ transactionToken });
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
